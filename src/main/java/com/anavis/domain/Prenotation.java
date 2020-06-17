@@ -21,7 +21,7 @@ public class Prenotation implements Serializable {
     @OneToOne(cascade = CascadeType.MERGE)
     private Date date;
 
-    @ManyToOne
+    @OneToOne
     @JsonIgnore
     private User user;
 
