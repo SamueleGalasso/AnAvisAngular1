@@ -35,7 +35,7 @@ public class User implements UserDetails, Serializable{
     private String paese;
     private String citta;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private Prenotation prenotation;
 
     public Prenotation getPrenotation() {
