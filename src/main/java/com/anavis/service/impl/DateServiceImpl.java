@@ -1,6 +1,7 @@
 package com.anavis.service.impl;
 
 import com.anavis.domain.Date;
+import com.anavis.domain.Prenotation;
 import com.anavis.repository.DateRepository;
 import com.anavis.service.DateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +50,11 @@ public class DateServiceImpl implements DateService {
     @Override
     public Date newDate() {
         return new Date();
+    }
+
+    @Override
+    public Prenotation setPrenotations(Prenotation prenotation) {
+        dateRepository.findById(prenotation.getDate().getId()).get().getPrenotations().add(prenotation);
+        return prenotation;
     }
 }

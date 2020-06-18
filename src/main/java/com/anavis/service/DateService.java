@@ -1,6 +1,7 @@
 package com.anavis.service;
 
 import com.anavis.domain.Date;
+import com.anavis.domain.Prenotation;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +19,6 @@ public interface DateService {
     void removeOne(Long id);
     //factory method
     Date newDate();
+    //set prenotations
+    Prenotation setPrenotations(Prenotation prenotation);
 }

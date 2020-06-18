@@ -41,8 +41,8 @@ public class UserServiceImpl implements UserService{
             }
 
             user.getUserRoles().addAll(userRoles);
-
         }
+
 
         return localUser;
     }

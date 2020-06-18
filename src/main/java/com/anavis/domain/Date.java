@@ -1,7 +1,11 @@
 package com.anavis.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Questa classe rappresenta una particolare data in cui è possibile effettuare una prenotazione da parte di un utente autenticato.
@@ -23,6 +27,20 @@ public class Date implements Serializable {
 
     @Column(columnDefinition = "text")
     private String description;
+
+    @OneToMany(mappedBy = "date", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Prenotation> prenotations = new HashSet<>();
+
+    public Set<Prenotation> getPrenotations() {
+        return prenotations;
+    }
+
+    public void setPrenotations(Set<Prenotation> prenotations) {
+        this.prenotations = prenotations;
+    }
+
+
 
     private int remainingNumber;
 

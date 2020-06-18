@@ -67,7 +67,7 @@ public class UserResource {
         }
 
         //creo il nuovo User e gli setto alcuni campi tra cui la password generata automaticamente in modo random
-        User user = new User();
+        User user = userService.newUser();
         user.setUsername(username);
         user.setEmail(userEmail);
 

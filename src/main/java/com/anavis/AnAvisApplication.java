@@ -25,6 +25,8 @@ public class AnAvisApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+
         User user1 = new User();
         user1.setFirstName("John");
         user1.setLastName("Adams");
@@ -37,7 +39,9 @@ public class AnAvisApplication implements CommandLineRunner {
         role1.setName("ROLE_USER");
         userRoles.add(new UserRole(user1, role1));
 
-        userService.createUser(user1, userRoles);
+        if(userService.createUser(user1, userRoles) == null){
+            userService.save(user1);
+        }
 
         userRoles.clear();
 
@@ -52,7 +56,10 @@ public class AnAvisApplication implements CommandLineRunner {
         role2.setName("ROLE_ADMIN");
         userRoles.add(new UserRole(user2, role2));
 
-        userService.createUser(user2, userRoles);
+
+        if(userService.createUser(user2, userRoles) == null){
+            userService.save(user2);
+        }
     }
 
 }

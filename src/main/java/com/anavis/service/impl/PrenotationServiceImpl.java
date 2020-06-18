@@ -4,6 +4,7 @@ import com.anavis.domain.Date;
 import com.anavis.domain.Prenotation;
 import com.anavis.domain.User;
 import com.anavis.repository.PrenotationRepository;
+import com.anavis.service.DateService;
 import com.anavis.service.PrenotationService;
 import com.anavis.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class PrenotationServiceImpl implements PrenotationService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private DateService dateService;
+
     @Override
     public Prenotation createPrenotation(User user, Date date) {
         Prenotation prenotation = this.newPrenotation();
@@ -35,6 +39,10 @@ public class PrenotationServiceImpl implements PrenotationService {
         prenotation.setPrenotationStatus("created");
         user.setPrenotation(prenotation);
         prenotation = prenotationRepository.save(prenotation);
+//        dateService.findOne(date.getId()).get().getPrenotaions().add(prenotation);
+//        dateService.save(date);
+//        System.out.println(dateService.findOne(date.getId()).get().getPrenotaions());
+
         return prenotation;
     }
 
