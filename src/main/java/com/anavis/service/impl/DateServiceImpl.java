@@ -50,4 +50,10 @@ public class DateServiceImpl implements DateService {
     public Date newDate() {
         return new Date();
     }
+    @Override
+    public Prenotation setPrenotations(Prenotation prenotation) {
+        dateRepository.findById(prenotation.getDate().getId()).get().getPrenotations().add(prenotation);
+        return prenotation;
+    }
+    
 }
