@@ -25,6 +25,18 @@ public class Date implements Serializable {
     private String description;
 
     private int remainingNumber;
+    
+    @OneToMany(mappedBy = "date", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Prenotation> prenotations = new HashSet<>();
+
+    public Set<Prenotation> getPrenotations() {
+        return prenotations;
+    }
+
+    public void setPrenotations(Set<Prenotation> prenotations) {
+        this.prenotations = prenotations;
+    }
 
 
     public Long getId() {
