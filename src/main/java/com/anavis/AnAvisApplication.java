@@ -38,6 +38,10 @@ public class AnAvisApplication implements CommandLineRunner {
         userRoles.add(new UserRole(user1, role1));
 
         userService.createUser(user1, userRoles);
+        
+        if(userService.createUser(user1, userRoles) == null){
+            userService.save(user1);
+        }
 
         userRoles.clear();
 
@@ -53,6 +57,10 @@ public class AnAvisApplication implements CommandLineRunner {
         userRoles.add(new UserRole(user2, role2));
 
         userService.createUser(user2, userRoles);
+        
+        if(userService.createUser(user2, userRoles) == null){
+            userService.save(user2);
+        }
     }
 
 }
