@@ -52,7 +52,8 @@ public class PrenotationResource {
         User user = userService.findByUsername(principal.getName());
         dateService.findOne(date.getId()).get().setRemainingNumber(dateService.findOne(date.getId()).get().getRemainingNumber() - 1);
         Prenotation prenotation = prenotationService.createPrenotation(user, date);
-
+        dateService.setPrenotations(prenotation);
+       
         user.setPrenotation(prenotation);
 
         this.prenotation = prenotation;
