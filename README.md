@@ -1,4 +1,4 @@
-# AnAvisIDS
+# AnAvisIDS (master branch iterazione-1)
 
 Il sistema da sviluppare dovrà consentire ai donatori Avis di prenotare le donazioni on-line e di poter controllare lo storico dei risultati delle proprie prenotazioni e analisi.
 Attualmente per poter prenotare una donazione Avis, i donatori devono telefonare o recarsi in una sede la quale riferirà loro quali sono i giorni e gli orari disponibili presso quella sede; ad ogni donazione, prima del prelievo si deve compilare un modello cartaceo in cui si attestano le proprie condizioni di salute.
