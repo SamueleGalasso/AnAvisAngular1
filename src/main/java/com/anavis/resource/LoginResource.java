@@ -75,13 +75,4 @@ public class LoginResource {
         return new ResponseEntity("Session Active!", HttpStatus.OK);
     }
 
-    /**
-     * Metodo utilizzato per effettuare il logout
-     * @return esponse entity settando status code a 200 e stampando in console Logout Successfully!
-     */
-    @RequestMapping(value = "/user/logout", method = RequestMethod.POST)
-    public ResponseEntity logout(){
-        SecurityContextHolder.clearContext();
-        return new ResponseEntity("Logout Successfully!", HttpStatus.OK);
-    }
 }
