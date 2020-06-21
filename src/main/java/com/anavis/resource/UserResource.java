@@ -183,56 +183,56 @@ public class UserResource {
         }
         //TODO
         //se il form viene lasciato vuoto salvo il codice fiscale precedente
-        if(codiceFiscale == null){
+        if(codiceFiscale == null || codiceFiscale == null){
             currentUser.get().setCodiceFiscale(currentUser.get().getCodiceFiscale());
         } else {
             currentUser.get().setCodiceFiscale(codiceFiscale);
         }
 
         //se il form viene lasciato vuoto salvo il numero di telefono precedente
-        if(stringPhone == null){
+        if(stringPhone == null || stringPhone == null){
             currentUser.get().setPhone(currentUser.get().getPhone());
         } else {
             currentUser.get().setPhone(stringPhone);
         }
 
-        if(firstName == null){
+        if(firstName == null || firstName == null){
             currentUser.get().setFirstName(currentUser.get().getFirstName());
         }else{
             currentUser.get().setFirstName(firstName);
         }
 
-        if(lastName == null){
+        if(lastName == null || lastName == null){
             currentUser.get().setLastName(currentUser.get().getLastName());
         }else{
             currentUser.get().setLastName(lastName);
         }
 
-        if(citta == null){
+        if(citta == null || citta.equals("")){
             currentUser.get().setCitta(currentUser.get().getCitta());
         }else {
             currentUser.get().setCitta(citta);
         }
 
-        if(paese == null) {
+        if(paese == null || paese.equals("")) {
             currentUser.get().setPaese(currentUser.get().getPaese());
         }else {
             currentUser.get().setPaese(paese);
         }
 
-        if(birthDate == null){
+        if(birthDate == null || birthDate.equals("")){
             currentUser.get().setBirthDate(currentUser.get().getBirthDate());
         }else {
             currentUser.get().setBirthDate(birthDate);
         }
 
-        if(extraUserInfo.equals("")){
+        if(extraUserInfo == null || extraUserInfo.equals("")){
             currentUser.get().setExtraUserInfo(currentUser.get().getExtraUserInfo());
         }else {
             currentUser.get().setExtraUserInfo(extraUserInfo);
         }
 
-        if(gruppoSanguigno.equals("")){
+        if(gruppoSanguigno == null || gruppoSanguigno.equals("")){
             currentUser.get().setGruppoSanguigno(currentUser.get().getGruppoSanguigno());
         }else {
             currentUser.get().setGruppoSanguigno(gruppoSanguigno);
