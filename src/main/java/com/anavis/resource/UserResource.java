@@ -261,5 +261,15 @@ public class UserResource {
         //se non entro nell'if ritorno un user vuoto
         return user;
      }
+    
+    /**
+     * Metodo utilizzato per effettuare il logout
+     * @return esponse entity settando status code a 200 e stampando in console Logout Successfully!
+     */
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public ResponseEntity logout(){
+        SecurityContextHolder.clearContext();
+        return new ResponseEntity("Logout Successfully!", HttpStatus.OK);
+    }
 
 }
