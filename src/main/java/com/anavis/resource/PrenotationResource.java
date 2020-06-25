@@ -1,15 +1,21 @@
 package com.anavis.resource;
 
+import com.anavis.domain.Bloodcount;
 import com.anavis.domain.Date;
 import com.anavis.domain.Prenotation;
 import com.anavis.domain.User;
+import com.anavis.service.BloodcountService;
 import com.anavis.service.DateService;
 import com.anavis.service.PrenotationService;
 import com.anavis.service.UserService;
+import com.anavis.utility.MailConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.xml.messaging.saaj.packaging.mime.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -36,6 +42,16 @@ public class PrenotationResource {
     @Autowired
     private PrenotationService prenotationService;
 
+    @Autowired
+    private MailConstructor mailConstructor;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private BloodcountService bloodcountService;
+
+
     /**
      * Metodo utilizzato da un utente autenticato per effettuare una prenotazione
      * @param mapper qui è presente il body della request proveniente dal client
@@ -51,14 +67,13 @@ public class PrenotationResource {
         Date date   = om.convertValue(mapper.get("date"), Date.class);
         User user = userService.findByUsername(principal.getName());
         dateService.findOne(date.getId()).get().setRemainingNumber(dateService.findOne(date.getId()).get().getRemainingNumber() - 1);
+
         Prenotation prenotation = prenotationService.createPrenotation(user, date);
         dateService.setPrenotations(prenotation);
 
         user.setPrenotation(prenotation);
 
         this.prenotation = prenotation;
-
-        //dateService.findOne(date.getId()).get().getPrenotations().add(prenotation);
 
         return prenotation;
 
@@ -94,6 +109,72 @@ public class PrenotationResource {
     }
 
     /**
+     * Serve per rimuovere una prenotazione, nel caso in cui un'addetto voglia eliminare una prenotazione.
+     * @param id id della prenotazione
+     * @return response entity status code 200, ok!
+     */
+    @RequestMapping(value = "/admin/remove", method = RequestMethod.POST)
+    public ResponseEntity removeAdmin(
+            @RequestBody String id
+    ){
+        if(userService.findByPrenotationId(Long.parseLong(id)) == null){
+            prenotationService.removeFromDb(Long.parseLong(id));
+            return new ResponseEntity("Remove Success Admin",HttpStatus.OK);
+        }else {
+        userService.findByPrenotationId(Long.parseLong(id)).setPrenotation(null);
+        prenotationService.removeFromDb(Long.parseLong(id));
+        return new ResponseEntity("Remove Success Admin", HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping("/bloodCount")
+    public Bloodcount getBloodcount(){
+        System.out.println(bloodcountService.getBloodcount());
+        return bloodcountService.getBloodcount();
+    }
+
+    /**
+     * Metodo utilizzato per indicare che una prenotazione è terminata, cioè la donazione è stata effettuata.
+     * @param prenotation la prenotazione effettuata
+     * @return response entity 200 ok!
+     */
+    @RequestMapping("/prenotationDone")
+    public ResponseEntity prenotationDone(
+            @RequestBody Prenotation prenotation
+    ){
+        User user = userService.findByPrenotationId(prenotation.getId());
+        if(user == null){
+            return new ResponseEntity("No User Found!",HttpStatus.BAD_REQUEST);
+        }
+        prenotation.setActive("inactive");
+        prenotation.setDonationDone(true);
+        prenotation.setUser(user);
+        prenotationService.save(prenotation);
+        Bloodcount bloodcount = bloodcountService.getBloodcount();
+        System.out.println(prenotation);
+        System.out.println(prenotation.getUser().getGruppoSanguigno());
+        if(prenotation.getUser().getGruppoSanguigno().equals("A")){
+            bloodcount.setTypeA((bloodcount.getTypeA() + 1));
+        }
+        if(prenotation.getUser().getGruppoSanguigno().equals("B")){
+            bloodcount.setTypeB(bloodcount.getTypeB() + 1);
+        }
+        if(prenotation.getUser().getGruppoSanguigno().equals("AB")){
+            bloodcount.setTypeAB(bloodcount.getTypeAB() + 1);
+        }
+        if(prenotation.getUser().getGruppoSanguigno().equals("0")){
+            bloodcount.setType0(bloodcount.getType0() + 1);
+        }
+        bloodcountService.save(bloodcount);
+
+
+
+        return new ResponseEntity("Prenotation Done!",HttpStatus.OK);
+    }
+
+
+
+    /**
      * Metodo utilizzato per visualizzare la lista delle preotazioni effettuate dall'utente nel corso del tempo.
      * @param principal l'utente che è attualmente loggato e attivo (currentUser)
      * @return ritorna la lista di tutte le prenotazioni effettuate dall'utente che ne fa richiesta.
@@ -102,4 +183,52 @@ public class PrenotationResource {
     public List<Prenotation> getPrenotationList(Principal principal) {
         return prenotationService.findAll(principal);
     }
+
+    /**
+     * Metodo utilizzato per visualizzare la lista di tutte le prenotazioni effettuate dagli utenti
+     * @return la lista di tutte le prenotazioni presenti nel db
+     */
+    @RequestMapping("/prenotationList")
+    public List<Prenotation> prenotationList(){
+        return prenotationService.findAll();
+    }
+
+    /**
+     * Metodo utilizzato per attivare una prenotazione inizialmente inattiva, nel caso in cui un addetto avis
+     * ritenga necessaria o adeguata la prenotazione dell'utente dopo una valutazione della cartella clinica del donatore
+     * spunta la prenotazione settandola ad active.
+     * @return response entity status code 200, ok!
+     */
+    @RequestMapping("/checkPrenotation")
+    public ResponseEntity checkPrenotation(
+            @RequestBody Prenotation prenotation
+    ) throws MessagingException {
+        User user = userService.findByPrenotationId(prenotation.getId());
+        if(user == null){
+            return new ResponseEntity("No User Found!",HttpStatus.BAD_REQUEST);
+        }
+        if(prenotation.getActive().equals("inactive")) {
+            prenotation.setActive("active");
+            SimpleMailMessage email = mailConstructor.prenotationConfirmed(user,prenotation);
+            mailSender.send(email);
+        }
+        else if(prenotation.getActive().equals("active")) {
+            prenotation.setActive("inactive");
+        }
+        prenotation.setUser(user);
+
+        prenotationService.save(prenotation);
+
+        return new ResponseEntity("Status Switched Successfully", HttpStatus.OK);
+    }
+
+    /**
+     * Metodo usato per ritornare una lista di utenti che hanno fatto almeno una prenotazione.
+     * @return lista di utenti che hanno fatto almeno una prenotazione
+     */
+    @RequestMapping("/prenotationUserList")
+    public List<User> userListByPrenotation(){
+        return userService.findAllByPrenotations();
+    }
+
 }

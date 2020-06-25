@@ -29,10 +29,9 @@ public class DateResource {
      * @return l'entità salvata nel db
      */
     @RequestMapping (value="/add", method=RequestMethod.POST)
-    public Date addPrenotationPost(
+    public Date addDatePost(
             @RequestBody Date date
     ) {
-
         return dateService.save(date);
     }
 
@@ -41,7 +40,7 @@ public class DateResource {
      * @return ritorna la lista di date da visualizzare
      */
     @RequestMapping("/dateList")
-    public List<Date> getPrenotationList() {
+    public List<Date> getDateList() {
         return dateService.findAll();
     }
 
@@ -51,7 +50,7 @@ public class DateResource {
      * @return l'entità salvata nel db.
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public Date updatePrenotationPost(@RequestBody Date date) {
+    public Date updateDatePost(@RequestBody Date date) {
         return dateService.save(date);
     }
 
@@ -61,7 +60,7 @@ public class DateResource {
      * @return la data da visualizzare
      */
     @RequestMapping("{id}")
-    public Optional<Date> getPrenotation(@PathVariable("id") Long id){
+    public Optional<Date> getDate(@PathVariable("id") Long id){
         Optional<Date> prenotation = dateService.findOne(id);
         return prenotation;
     }

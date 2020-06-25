@@ -36,14 +36,11 @@ public class Date implements Serializable {
         return prenotations;
     }
 
+    private int remainingNumber;
+
     public void setPrenotations(Set<Prenotation> prenotations) {
         this.prenotations = prenotations;
     }
-
-
-
-    private int remainingNumber;
-
 
     public Long getId() {
         return id;
@@ -61,8 +58,6 @@ public class Date implements Serializable {
         this.place = place;
     }
 
-
-
     public String getPrenotationDate() {
         return prenotationDate;
     }
@@ -70,8 +65,6 @@ public class Date implements Serializable {
     public void setPrenotationDate(String publicationDate) {
         this.prenotationDate = publicationDate;
     }
-
-
 
     public boolean isActive() {
         return active;

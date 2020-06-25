@@ -12,19 +12,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Email;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Controller che gestisce tutte le richieste inerenti all'user autenticato e loggato (con sessione attiva).
@@ -41,6 +36,11 @@ public class UserResource {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    private int bloodCounterA;
+    private int bloodCounterB;
+    private int bloodCounterAB;
+    private int bloodCounter0;
 
     /**
      * Metodo utilizzato per creare un nuovo utente
@@ -83,11 +83,45 @@ public class UserResource {
         Set<UserRole> userRoles = new HashSet<>();
         userRoles.add(new UserRole(user, role));
         userService.createUser(user, userRoles);
+        user.setEnabled(false);
         //invio all'utente un'email contenente le credenziali tra cui la password generata
         SimpleMailMessage email = mailConstructor.constructNewUserEmail(user, password);
         mailSender.send(email);
 
         return new ResponseEntity("User Added Successfully!", HttpStatus.OK);
+
+    }
+
+    /**
+     * Metodo utilizzato per resettare la password nel caso in cui venga smarrita.
+     * @param mapper body della request, da cui estraggo il contenuto del form
+     * @return response entity
+     * @throws Exception
+     */
+    @RequestMapping(value="/forgetPassword", method=RequestMethod.POST)
+    public ResponseEntity forgetPasswordPost(
+            @RequestBody HashMap<String, String> mapper
+    ) throws Exception {
+
+        User user = userService.findByEmail(mapper.get("email"));
+
+        //se l'utente non viene trovato tramite l'email inserita nel form ritorno questo
+        //bad request
+        if(user == null) {
+            return new ResponseEntity("Email not found", HttpStatus.BAD_REQUEST);
+        }
+        String password = SecurityUtility.randomPassword();
+
+        //genero una nuova password la crypto, la salvo nel db al posto della vecchia e mando le nuove credenziali tramite email
+
+        String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
+        user.setPassword(encryptedPassword);
+        userService.save(user);
+
+        SimpleMailMessage newEmail = mailConstructor.constructNewUserEmail(user, password);
+        mailSender.send(newEmail);
+
+        return new ResponseEntity("Email sent!", HttpStatus.OK);
 
     }
 
@@ -163,7 +197,7 @@ public class UserResource {
         //in quel caso invece di aggiornare il campo con una stringa vuota salvo nuovamente il campo che è gia presente nel db
 
         //se il form viene lasciato vuoto salvo l'email precedente
-        if(email.equals("")){
+        if(email.equals("") || email == null){
             currentUser.get().setEmail(currentUser.get().getEmail());
         }//se viene trovata l'email inserita nel form nel db allora vuol dire che è gia in uso e non possiamo cambiarla
         else if(userService.findByEmail(email) != null) {
@@ -173,7 +207,7 @@ public class UserResource {
         }
 
         //se il form viene lasciato vuoto salvo l'username precedente
-        if(username.equals("")){
+        if(username.equals("") || username == null){
             currentUser.get().setUsername(currentUser.get().getUsername());
         }//se viene trovato l'username inserito nel form nel db già esiste e non possiamo cambiarlo
         else if(userService.findByUsername(username) != null) {
@@ -181,58 +215,58 @@ public class UserResource {
         }else{
             currentUser.get().setUsername(username);
         }
-        //TODO
+        //TODO controlla se null o ""
         //se il form viene lasciato vuoto salvo il codice fiscale precedente
-        if(codiceFiscale == null){
+        if(codiceFiscale == null || codiceFiscale == null){
             currentUser.get().setCodiceFiscale(currentUser.get().getCodiceFiscale());
         } else {
             currentUser.get().setCodiceFiscale(codiceFiscale);
         }
 
         //se il form viene lasciato vuoto salvo il numero di telefono precedente
-        if(stringPhone == null){
+        if(stringPhone == null || stringPhone == null){
             currentUser.get().setPhone(currentUser.get().getPhone());
         } else {
             currentUser.get().setPhone(stringPhone);
         }
 
-        if(firstName == null){
+        if(firstName == null || firstName == null){
             currentUser.get().setFirstName(currentUser.get().getFirstName());
         }else{
             currentUser.get().setFirstName(firstName);
         }
 
-        if(lastName == null){
+        if(lastName == null || lastName == null){
             currentUser.get().setLastName(currentUser.get().getLastName());
         }else{
             currentUser.get().setLastName(lastName);
         }
 
-        if(citta == null){
+        if(citta == null || citta.equals("")){
             currentUser.get().setCitta(currentUser.get().getCitta());
         }else {
             currentUser.get().setCitta(citta);
         }
 
-        if(paese == null) {
+        if(paese == null || paese.equals("")) {
             currentUser.get().setPaese(currentUser.get().getPaese());
         }else {
             currentUser.get().setPaese(paese);
         }
 
-        if(birthDate == null){
+        if(birthDate == null || birthDate.equals("")){
             currentUser.get().setBirthDate(currentUser.get().getBirthDate());
         }else {
             currentUser.get().setBirthDate(birthDate);
         }
 
-        if(extraUserInfo.equals("")){
+        if(extraUserInfo == null || extraUserInfo.equals("")){
             currentUser.get().setExtraUserInfo(currentUser.get().getExtraUserInfo());
         }else {
             currentUser.get().setExtraUserInfo(extraUserInfo);
         }
 
-        if(gruppoSanguigno.equals("")){
+        if(gruppoSanguigno == null || gruppoSanguigno.equals("")){
             currentUser.get().setGruppoSanguigno(currentUser.get().getGruppoSanguigno());
         }else {
             currentUser.get().setGruppoSanguigno(gruppoSanguigno);
@@ -261,5 +295,36 @@ public class UserResource {
         //se non entro nell'if ritorno un user vuoto
         return user;
      }
+
+    /**
+     * Metodo utilizzato per effettuare il logout
+     * @return response entity settando status code a 200 e stampando in console Logout Successfully!
+     */
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public ResponseEntity logout(){
+        SecurityContextHolder.clearContext();
+        return new ResponseEntity("Logout Successfully!", HttpStatus.OK);
+    }
+
+    /**
+     * Metodo utilizzato per ottenere una lista di tutti gli user presenti nel db.
+     * @return tutti gli user salvati nel db.
+     */
+    @RequestMapping("/userList")
+    public List<User> userList(){
+        return userService.findAll();
+    }
+
+    /**
+     * Metodo utilizzato per ottenere uno specifico user in base all'id che viene passato come parametro
+     * @param id id dell'user che stiamo cercando
+     * @return l'user con questo id
+     */
+    @RequestMapping("{id}")
+    public Optional<User> getUser(
+            @PathVariable("id") Long id
+    ){
+        return userService.findById(id);
+    }
 
 }

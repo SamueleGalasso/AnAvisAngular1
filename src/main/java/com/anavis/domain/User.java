@@ -38,6 +38,17 @@ public class User implements UserDetails, Serializable{
     @OneToOne(cascade = CascadeType.ALL)
     private Prenotation prenotation;
 
+    @OneToMany(mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<UserRole> userRoles = new HashSet<>();
+
+    private String email;
+    private String phone;
+    private boolean enabled = true;
+
+    @Column(columnDefinition="text")
+    private String extraUserInfo;
+
     public Prenotation getPrenotation() {
         return prenotation;
     }
@@ -45,10 +56,6 @@ public class User implements UserDetails, Serializable{
     public void setPrenotation(Prenotation prenotation) {
         this.prenotation = prenotation;
     }
-
-    @Column(columnDefinition="text")
-    private String extraUserInfo;
-
 
     public String getPaese() {
         return paese;
@@ -97,20 +104,6 @@ public class User implements UserDetails, Serializable{
     public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
-
-    private String email;
-    private String phone;
-    private boolean enabled = true;
-
-
-
-
-    @OneToMany(mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Set<UserRole> userRoles = new HashSet<>();
-
-
-
 
     public Long getId() {
         return id;
@@ -167,8 +160,6 @@ public class User implements UserDetails, Serializable{
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
-
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;

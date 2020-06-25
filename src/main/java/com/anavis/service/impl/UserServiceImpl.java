@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,6 +23,7 @@ import java.util.Set;
 public class UserServiceImpl implements UserService{
 
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+
 
     @Autowired
     private UserRepository userRepository;
@@ -66,6 +69,66 @@ public class UserServiceImpl implements UserService{
     public User newUser() {
         return new User();
     }
+
+
+    @Override
+    public List<User> findAllByPrenotations() {
+        List<User> userList = (List<User>) userRepository.findAll();
+        List<User> filteredUserList = new ArrayList<>();
+        for(User user: userList){
+            if(user.getPrenotation() != null){
+                    filteredUserList.add(user);
+            }else {
+                continue;
+            }
+        }
+
+        return filteredUserList;
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public List<User> findAllByBloodType(String bloodtype) {
+        List<User> userList = (List<User>) userRepository.findAll();
+        List<User> filteredUserList = new ArrayList<>();
+        for(User user: userList){
+            if(user.getGruppoSanguigno() != null){
+                if(user.getGruppoSanguigno().equals(bloodtype)){
+                    filteredUserList.add(user);
+                }
+            }else {
+                continue;
+            }
+
+        }
+        return filteredUserList;
+    }
+
+    @Override
+    public User findByPrenotationId(Long id) {
+        List<User> userList = (List<User>) userRepository.findAll();
+        List<User> filteredUserList = new ArrayList<>();
+        for(User user: userList){
+            if(user.getPrenotation() != null){
+                if(user.getPrenotation().getId().equals(id)){
+                    filteredUserList.add(user);
+                    break;
+                }
+            }
+            else {
+                continue;
+            }
+        }
+        if(filteredUserList.size() == 0){
+            return null;
+        }
+        return filteredUserList.get(0);
+    }
+
 
     @Override
     public User findByUsername(String username) {

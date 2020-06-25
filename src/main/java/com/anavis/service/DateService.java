@@ -7,18 +7,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DateService {
-    //metodo che ritorna una lista di tutte le date presente nel db
+    //metodo che ritorna una lista di tutte le date presenti nel db
     List<Date> findAll();
-    //metodo che cerca e ritorna una specifica data tramite id
+    //metodo che cerca tramite id e ritorna una specifica data
     Optional<Date> findOne(Long id);
     //metodo che salva nel db una data e la ritorna
     Date save(Date date);
-
-    //List<Prenotation> blurrySearch(String title);
     //metodo utilizzato per rimuovere una specifica data dal db tramite id
     void removeOne(Long id);
-    //factory method
-    Date newDate();
-    //set prenotations
-    Prenotation setPrenotations(Prenotation prenotation);
+    //metodo utilizzato per aggiungere una prenotazione alla rispettiva data
+    void setPrenotations(Prenotation prenotation);
 }

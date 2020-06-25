@@ -1,9 +1,11 @@
 package com.anavis;
 
 import com.anavis.config.SecurityUtility;
+import com.anavis.domain.Bloodcount;
 import com.anavis.domain.User;
 import com.anavis.domain.security.Role;
 import com.anavis.domain.security.UserRole;
+import com.anavis.service.BloodcountService;
 import com.anavis.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -18,6 +20,8 @@ public class AnAvisApplication implements CommandLineRunner {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private BloodcountService bloodcountService;
 
     public static void main(String[] args) {
         SpringApplication.run(AnAvisApplication.class, args);
@@ -25,6 +29,10 @@ public class AnAvisApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        if(bloodcountService.getBloodcount() == null) {
+            Bloodcount bloodcount = new Bloodcount();
+            bloodcountService.save(bloodcount);
+        }
 
 
         User user1 = new User();

@@ -21,7 +21,27 @@ public class Prenotation implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     private Date date;
 
-    @OneToOne 
+    private String active = "inactive";
+
+    private boolean donationDone = false;
+
+    public boolean isDonationDone() {
+        return donationDone;
+    }
+
+    public void setDonationDone(boolean donationDone) {
+        this.donationDone = donationDone;
+    }
+
+    public String getActive() {
+        return active;
+    }
+
+    public void setActive(String active) {
+        this.active = active;
+    }
+
+    @OneToOne
     @JsonIgnore
     private User user;
 
@@ -58,6 +78,8 @@ public class Prenotation implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
+
+
 
 
 

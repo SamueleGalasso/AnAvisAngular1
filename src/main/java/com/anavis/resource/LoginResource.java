@@ -6,9 +6,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,13 +73,5 @@ public class LoginResource {
         return new ResponseEntity("Session Active!", HttpStatus.OK);
     }
 
-    /**
-     * Metodo utilizzato per effettuare il logout
-     * @return esponse entity settando status code a 200 e stampando in console Logout Successfully!
-     */
-    @RequestMapping(value = "/user/logout", method = RequestMethod.POST)
-    public ResponseEntity logout(){
-        SecurityContextHolder.clearContext();
-        return new ResponseEntity("Logout Successfully!", HttpStatus.OK);
-    }
+
 }

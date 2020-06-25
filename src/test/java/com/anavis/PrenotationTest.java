@@ -11,12 +11,16 @@ import com.anavis.resource.PrenotationResource;
 import com.anavis.service.DateService;
 import com.anavis.service.PrenotationService;
 import com.anavis.service.UserService;
+import com.sun.xml.messaging.saaj.packaging.mime.MessagingException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.helger.commons.mock.CommonsAssert.assertEquals;
 
@@ -35,6 +39,14 @@ public class PrenotationTest {
     private Date date;
 
     private User user1;
+
+    private User user2;
+
+    private Prenotation prenotation2;
+
+    private Date date2;
+
+    private User user3;
 
     @Autowired
     private PrenotationRepository prenotationRepository;
@@ -59,29 +71,57 @@ public class PrenotationTest {
 
     @Before
     public void set(){
+        user3 = new User();
+        user3.setGruppoSanguigno("A");
+        user3.setUsername("pippo3");
+        userService.save(user3);
         user1 = new User();
+        user1.setGruppoSanguigno("A");
+        user1.setUsername("pippo1");
         date = new Date();
         date.setPlace("SBT");
         date.setPrenotationDate("2020-12-11");
         date.setActive(true);
-        date.setDescription("Test Description");
+        date.setDescription("Test1");
         date.setRemainingNumber(12);
-        dateResource.addPrenotationPost(date);
+        dateResource.addDatePost(date);
         prenotation1 = new Prenotation();
-        prenotation1.setPrenotationStatus("created");
+        prenotation1.setPrenotationStatus("createdTest1");
         prenotation1.setDate(date);
         prenotation1.setUser(user1);
+        prenotation1.setActive("active");
         user1.setPrenotation(prenotation1);
         userService.save(user1);
         prenotationRepository.save(prenotation1);
+        user2 = new User();
+        user2.setGruppoSanguigno("A");
+        user2.setUsername("pippo2");
+        date2 = new Date();
+        date2.setPlace("SBT");
+        date2.setPrenotationDate("2020-12-11");
+        date2.setActive(true);
+        date2.setDescription("Test2");
+        date2.setRemainingNumber(12);
+        dateResource.addDatePost(date2);
+        prenotation2 = new Prenotation();
+        prenotation2.setPrenotationStatus("createdTest2");
+        prenotation2.setDate(date2);
+        prenotation2.setUser(user2);
+        user2.setPrenotation(prenotation2);
+        userService.save(user2);
+        prenotationRepository.save(prenotation2);
     }
 
     @Test
     public void testAddPrenotation(){
         assertEquals(prenotationService.findOne(prenotation1.getId()).get().getId(), prenotation1.getId());
         prenotationService.removeFromDb(prenotation1.getId());
+        prenotationService.removeFromDb(prenotation2.getId());
         userService.remove(user1.getId());
+        userService.remove(user2.getId());
+        userService.remove(user3.getId());
         dateService.removeOne(date.getId());
+        dateService.removeOne(date2.getId());
 
 
     }
@@ -90,32 +130,97 @@ public class PrenotationTest {
     public void testGetPrenotation(){
         assertEquals(prenotationResource.getPrenotation(prenotation1.getId()).get().getId(), prenotation1.getId());
         prenotationService.removeFromDb(prenotation1.getId());
+        prenotationService.removeFromDb(prenotation2.getId());
         userService.remove(user1.getId());
+        userService.remove(user2.getId());
+        userService.remove(user3.getId());
         dateService.removeOne(date.getId());
+        dateService.removeOne(date2.getId());
     }
 
-//    @Test
-//    public void testGetPrenotationList(){
-//        List<Prenotation> prenotationList = prenotationResource.getPrenotationList(principal);
-//        assertEquals(prenotationList.get(0).getId(), prenotation1.getId());
-//        assertEquals(prenotationList.get(1).getId(), prenotation2.getId());
-//        dateService.removeOne(date.getId());
-//        userService.remove(user1.getId());
-//        userService.remove(user2.getId());
-//        prenotationService.removeFromDb(prenotation1.getId());
-//        prenotationService.removeFromDb(prenotation2.getId());
-//    }
+    @Test
+    public void removePrenotation(){
+        prenotationResource.removeAdmin(this.prenotation1.getId().toString());
+        prenotationResource.removeAdmin(this.prenotation2.getId().toString());
 
-//    @Test
-//    public void testRemovePrenotation() throws IOException {
-//
-//        prenotationResource.remove(prenotation1.getId().toString(), principal);
-//        assertEquals(prenotationResource.getPrenotationList(principal).size(), 1);
-//        dateService.removeOne(date.getId());
-//        userService.remove(user1.getId());
-//        userService.remove(user2.getId());
-//        prenotationService.removeFromDb(prenotation2.getId());
-//    }
+        userService.remove(user1.getId());
+        userService.remove(user2.getId());
+        userService.remove(user3.getId());
+        dateService.removeOne(date.getId());
+        dateService.removeOne(date2.getId());
+        assertEquals(prenotationService.findOne(prenotation1.getId()).isPresent(), false);
+    }
+
+    @Test
+    public void prenotationDone(){
+        prenotationResource.prenotationDone(this.prenotation1);
+        assertEquals(this.prenotation1.isDonationDone(), true);
+        prenotationResource.removeAdmin(this.prenotation1.getId().toString());
+        prenotationResource.removeAdmin(this.prenotation2.getId().toString());
+
+        userService.remove(user1.getId());
+        userService.remove(user2.getId());
+        userService.remove(user3.getId());
+        dateService.removeOne(date.getId());
+        dateService.removeOne(date2.getId());
+    }
+
+    @Test
+    public void prenotationList(){
+        List<Prenotation> prenotationList = prenotationResource.prenotationList();
+        List<Prenotation> filteredList = new ArrayList<>();
+        for(Prenotation prenotation: prenotationList){
+            if(prenotation.getPrenotationStatus().equals("createdTest1") || prenotation.getPrenotationStatus().equals("createdTest2")){
+                filteredList.add(prenotation);
+            }
+        }
+        prenotationResource.removeAdmin(this.prenotation1.getId().toString());
+        prenotationResource.removeAdmin(this.prenotation2.getId().toString());
+
+        userService.remove(user1.getId());
+        userService.remove(user2.getId());
+        userService.remove(user3.getId());
+        dateService.removeOne(date.getId());
+        dateService.removeOne(date2.getId());
+        assertEquals(filteredList.size(), 2);
+    }
+
+    @Test
+    public void checkPrenotation() throws MessagingException {
+        prenotationResource.checkPrenotation(this.prenotation1);
+        assertEquals(this.prenotation1.getActive(), "inactive");
+        prenotationResource.removeAdmin(this.prenotation1.getId().toString());
+        prenotationResource.removeAdmin(this.prenotation2.getId().toString());
+
+        userService.remove(user1.getId());
+        userService.remove(user2.getId());
+        userService.remove(user3.getId());
+        dateService.removeOne(date.getId());
+        dateService.removeOne(date2.getId());
+    }
+
+    @Test
+    public void prenotationUserList(){
+        List<User> userList = prenotationResource.userListByPrenotation();
+        List<User> filteredList = new ArrayList<>();
+
+        for(User user : userList){
+            if(user.getUsername().equals("pippo1") || user.getUsername().equals("pippo2") || user.getUsername().equals("pippo3")){
+                filteredList.add(user);
+            }
+        }
+        prenotationResource.removeAdmin(this.prenotation1.getId().toString());
+        prenotationResource.removeAdmin(this.prenotation2.getId().toString());
+
+        userService.remove(user1.getId());
+        userService.remove(user2.getId());
+        userService.remove(user3.getId());
+        dateService.removeOne(date.getId());
+        dateService.removeOne(date2.getId());
+        assertEquals(filteredList.size(), 2);
+
+    }
+
 
 
 }

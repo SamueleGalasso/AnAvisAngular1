@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.helger.commons.mock.CommonsAssert.assertEquals;
@@ -36,38 +37,44 @@ public class DateTest {
         date.setPlace("SBT");
         date.setPrenotationDate("2020-12-11");
         date.setActive(true);
-        date.setDescription("Test Description");
+        date.setDescription("Test1");
         date.setRemainingNumber(12);
         date2.setPlace("PDA");
         date2.setPrenotationDate("2020-10-09");
         date2.setActive(true);
-        date2.setDescription("Test Description 2");
+        date2.setDescription("Test2");
         date2.setRemainingNumber(10);
-        dateResource.addPrenotationPost(date);
-        dateResource.addPrenotationPost(date2);
+        dateResource.addDatePost(date);
+        dateResource.addDatePost(date2);
     }
 
 
 
     @Test
-    public void testAddPrenotationPost(){
+    public void testAddDatePost(){
         assertEquals(dateService.findOne(date.getId()).get().getId(), date.getId());
         dateService.removeOne(date.getId());
         dateService.removeOne(date2.getId());
     }
 
     @Test
-    public void testGetPrenotationList(){
-        List<Date> dateList = dateResource.getPrenotationList();
-        assertEquals(dateList.get(0).getId(), date.getId());
-        assertEquals(dateList.get(1).getId(), date2.getId());
+    public void testGetDateList(){
+        List<Date> dateList = dateResource.getDateList();
+        List<Date> dateList1 = new ArrayList<>();
+        for(Date date : dateList){
+            if(date.getDescription().equals("Test1") || date.getDescription().equals("Test2")){
+                dateList1.add(date);
+            }
+        }
         dateService.removeOne(date.getId());
         dateService.removeOne(date2.getId());
+        assertEquals(dateList1.size(), 2);
+
     }
 
     @Test
-    public void testGetPrenotation(){
-        assertEquals(dateResource.getPrenotation(date.getId()).get().getId(), date.getId());
+    public void testGetDate(){
+        assertEquals(dateResource.getDate(date.getId()).get().getId(), date.getId());
         dateService.removeOne(date.getId());
         dateService.removeOne(date2.getId());
     }
@@ -75,8 +82,16 @@ public class DateTest {
     @Test
     public void testRemove() throws IOException {
         dateResource.remove(date.getId().toString());
-        assertEquals(dateResource.getPrenotationList().size(), 1);
-        dateService.removeOne(date2.getId());
+        dateResource.remove(date2.getId().toString());
+        List<Date> dateList = dateResource.getDateList();
+        List<Date> dateList1 = new ArrayList<>();
+        for(Date date : dateList){
+            if(date.getDescription().equals("Test1") || date.getDescription().equals("Test2")){
+                dateList1.add(date);
+            }
+        }
+
+        assertEquals(dateList1.size(), 0);
     }
 
 
