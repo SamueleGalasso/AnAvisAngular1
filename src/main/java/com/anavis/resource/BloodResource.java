@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Controller che gestisce la richiesta di carenza di sangue.
+ */
 @RestController
 @RequestMapping("/blood")
 public class BloodResource {

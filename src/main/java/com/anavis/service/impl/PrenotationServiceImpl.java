@@ -51,7 +51,6 @@ public class PrenotationServiceImpl implements PrenotationService {
         List<Prenotation> activePrenotationList = new ArrayList<>();
 
         for (Prenotation prenotation : prenotationList) {
-            //togli && e ritorna la lista di tutte le prenotazioni
             if(prenotation.getDate().isActive() && prenotation.getUser().getId()==user.getId()) {
                 activePrenotationList.add(prenotation);
             }

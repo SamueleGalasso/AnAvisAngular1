@@ -6,6 +6,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
+/**
+ * Classe utilizzata per contare la quantità di sangue distinto per gruppo sanguigno che entra nei depositi dell'avis
+ */
 @Entity
 public class Bloodcount implements Serializable {
 

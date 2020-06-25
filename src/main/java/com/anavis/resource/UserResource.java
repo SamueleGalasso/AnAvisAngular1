@@ -155,20 +155,20 @@ public class UserResource {
         String gruppoSanguigno = (String) mapper.get("gruppoSanguigno");
 
         //user attualmente loggato e autenticato con sessione attiva
-        Optional<User> currentUser = userService.findById(Long.valueOf(id));
+        User currentUser = userService.findByUsername(principal.getName());
         //nel caso non ci sia un utente loggato
         if(currentUser == null) {
             throw new Exception ("User not found");
         }
         //nel caso non venga trovata nel db l'email dell'utente loggato
         if(userService.findByEmail(email) != null) {
-            if(userService.findByEmail(email).getId() != currentUser.get().getId()) {
+            if(userService.findByEmail(email).getId() != currentUser.getId()) {
                 return new ResponseEntity("Email not found!", HttpStatus.BAD_REQUEST);
             }
         }
         //nel caso non venga trovato l'username dell'utente loggato
         if(userService.findByUsername(username) != null) {
-            if(userService.findByUsername(username).getId() != currentUser.get().getId()) {
+            if(userService.findByUsername(username).getId() != currentUser.getId()) {
                 return new ResponseEntity("Username not found!", HttpStatus.BAD_REQUEST);
             }
         }
@@ -177,12 +177,12 @@ public class UserResource {
 
 
         BCryptPasswordEncoder passwordEncoder = SecurityUtility.passwordEncoder();
-        String dbPassword = currentUser.get().getPassword();
+        String dbPassword = currentUser.getPassword();
         //nel caso in cui la password corrente inserita nel form sia errata
         if(null != currentPassword)
             if(passwordEncoder.matches(currentPassword, dbPassword)) {
                 if(newPassword != null && !newPassword.isEmpty() && !newPassword.equals("")) {
-                    currentUser.get().setPassword(passwordEncoder.encode(newPassword));
+                    currentUser.setPassword(passwordEncoder.encode(newPassword));
                 }
                 //currentUser.get().setEmail(email);
             } else {
@@ -198,85 +198,95 @@ public class UserResource {
 
         //se il form viene lasciato vuoto salvo l'email precedente
         if(email.equals("") || email == null){
-            currentUser.get().setEmail(currentUser.get().getEmail());
+            currentUser.setEmail(currentUser.getEmail());
         }//se viene trovata l'email inserita nel form nel db allora vuol dire che è gia in uso e non possiamo cambiarla
         else if(userService.findByEmail(email) != null) {
             return new ResponseEntity("emailExists", HttpStatus.BAD_REQUEST);
         }else{
-            currentUser.get().setEmail(email);
+            currentUser.setEmail(email);
         }
 
         //se il form viene lasciato vuoto salvo l'username precedente
         if(username.equals("") || username == null){
-            currentUser.get().setUsername(currentUser.get().getUsername());
+            currentUser.setUsername(currentUser.getUsername());
         }//se viene trovato l'username inserito nel form nel db già esiste e non possiamo cambiarlo
         else if(userService.findByUsername(username) != null) {
             return new ResponseEntity("usernameExists", HttpStatus.BAD_REQUEST);
         }else{
-            currentUser.get().setUsername(username);
+            currentUser.setUsername(username);
         }
-        //TODO controlla se null o ""
+        //se il form viene lasciato vuoto salvo le credenziali precedentemente presenti nel db.
+
+        this.checkUserInfo1(codiceFiscale,stringPhone,firstName,currentUser);
+        this.checkUserInfo2(lastName,citta,paese,currentUser);
+        this.checkUserInfo3(birthDate, extraUserInfo, gruppoSanguigno, currentUser);
+
+        userService.save(currentUser);
+
+        return new ResponseEntity("Update Success", HttpStatus.OK);
+    }
+
+    public void checkUserInfo1(String codiceFiscale, String stringPhone, String firstName, User currentUser){
         //se il form viene lasciato vuoto salvo il codice fiscale precedente
         if(codiceFiscale == null || codiceFiscale == null){
-            currentUser.get().setCodiceFiscale(currentUser.get().getCodiceFiscale());
+            currentUser.setCodiceFiscale(currentUser.getCodiceFiscale());
         } else {
-            currentUser.get().setCodiceFiscale(codiceFiscale);
+            currentUser.setCodiceFiscale(codiceFiscale);
         }
 
         //se il form viene lasciato vuoto salvo il numero di telefono precedente
         if(stringPhone == null || stringPhone == null){
-            currentUser.get().setPhone(currentUser.get().getPhone());
+            currentUser.setPhone(currentUser.getPhone());
         } else {
-            currentUser.get().setPhone(stringPhone);
+            currentUser.setPhone(stringPhone);
         }
 
         if(firstName == null || firstName == null){
-            currentUser.get().setFirstName(currentUser.get().getFirstName());
+            currentUser.setFirstName(currentUser.getFirstName());
         }else{
-            currentUser.get().setFirstName(firstName);
+            currentUser.setFirstName(firstName);
         }
+    }
 
-        if(lastName == null || lastName == null){
-            currentUser.get().setLastName(currentUser.get().getLastName());
+    public void checkUserInfo2(String lastName, String citta, String paese, User currentUser){
+        if(lastName == null || lastName.equals("")){
+            currentUser.setLastName(currentUser.getLastName());
         }else{
-            currentUser.get().setLastName(lastName);
+            currentUser.setLastName(lastName);
         }
 
         if(citta == null || citta.equals("")){
-            currentUser.get().setCitta(currentUser.get().getCitta());
+            currentUser.setCitta(currentUser.getCitta());
         }else {
-            currentUser.get().setCitta(citta);
+            currentUser.setCitta(citta);
         }
 
         if(paese == null || paese.equals("")) {
-            currentUser.get().setPaese(currentUser.get().getPaese());
+            currentUser.setPaese(currentUser.getPaese());
         }else {
-            currentUser.get().setPaese(paese);
+            currentUser.setPaese(paese);
         }
 
+    }
+
+    public void checkUserInfo3(String birthDate, String extraUserInfo, String gruppoSanguigno, User currentUser){
         if(birthDate == null || birthDate.equals("")){
-            currentUser.get().setBirthDate(currentUser.get().getBirthDate());
+            currentUser.setBirthDate(currentUser.getBirthDate());
         }else {
-            currentUser.get().setBirthDate(birthDate);
+            currentUser.setBirthDate(birthDate);
         }
 
         if(extraUserInfo == null || extraUserInfo.equals("")){
-            currentUser.get().setExtraUserInfo(currentUser.get().getExtraUserInfo());
+            currentUser.setExtraUserInfo(currentUser.getExtraUserInfo());
         }else {
-            currentUser.get().setExtraUserInfo(extraUserInfo);
+            currentUser.setExtraUserInfo(extraUserInfo);
         }
 
         if(gruppoSanguigno == null || gruppoSanguigno.equals("")){
-            currentUser.get().setGruppoSanguigno(currentUser.get().getGruppoSanguigno());
+            currentUser.setGruppoSanguigno(currentUser.getGruppoSanguigno());
         }else {
-            currentUser.get().setGruppoSanguigno(gruppoSanguigno);
+            currentUser.setGruppoSanguigno(gruppoSanguigno);
         }
-
-
-
-        userService.save(currentUser.get());
-
-        return new ResponseEntity("Update Success", HttpStatus.OK);
     }
 
     /**
