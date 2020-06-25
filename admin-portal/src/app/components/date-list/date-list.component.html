@@ -1,0 +1,40 @@
+<div class="container">
+	<div class="table-responsive" style="margin-top: 30px">
+		<table id="dateListTable" class="table bordered highlight">
+			<thead>
+				<tr>
+					<th>
+						<input type="checkbox" (change)="updateSelected($event.target.checked)"/>
+					</th>
+					<th>Place</th>
+					<th>Date</th>
+					<th>Available Number</th>
+					<th>Active?</th>
+					<th>Operation</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor = "let date of dateList">
+
+					<td>
+					<input hidden="hidden" name="id">
+					<input type="checkbox" [checked]="allChecked" (change)="updateRemoveDateList($event.target.checked, date)"/>
+					</td>
+					<td>
+						<a (click)="onSelect(date)" style="cursor: pointer;">{{date.place}}</a>
+					</td>
+					<td>{{date.prenotationDate}}</td>
+					<td>{{date.remainingNumber}}</td>
+					<td>{{date.active}}</td>
+					<td>
+						<input hidden="hidden" name="id"/>
+						<button mat-button (click)="openDialog(date)" value="delete"><span class="fa fa-times"></span> delete</button>
+					</td>
+					
+					
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<button mat-raised-button class="mat-warn" id="deleteSelected" (click)="removeSelectedDates()">Delete Selected</button>
+</div>

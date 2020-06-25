@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="table-responsive" style="margin-top: 30px">
+    <table id="dateListTable" class="table bordered highlight">
+      <thead>
+        <tr>
+        
+          <th>Blood Type A</th>
+          <th>Blood Type B</th>
+          <th>Blood Type AB</th>
+          <th>Blood Type 0</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+
+          <td>
+           {{bloodcount.typeA}}</td>
+          <td>{{bloodcount.typeB}}</td>
+          <td>{{bloodcount.typeAB}}</td>
+          <td>{{bloodcount.type0}}</td>
+          
+          
+          
+        </tr>
+      </tbody>
+    </table>
+  </div>
+             <div style="width: 43%">
+               <mat-form-field>
+                  <mat-placeholder class="placeholder">Blood Type</mat-placeholder>
+                      <mat-select  [(ngModel)]="user.gruppoSanguigno" name="gruppoSanguigno" >
+                        <mat-option value="A">A</mat-option>
+                        <mat-option value="B">B</mat-option>
+                        <mat-option value="AB">AB</mat-option>
+                        <mat-option value="0">0</mat-option>
+                      </mat-select>
+
+                      </mat-form-field>
+                    </div>
+  <br>
+  <button mat-raised-button class="mat-warn" (click)="onBloodDeficiency(user.gruppoSanguigno)">Blood Deficiency Request</button>
+  <div *ngIf="bloodRequest" style="color:green;">
+    <strong style="margin-left: 500px;">Blood Request Sent Successfully!</strong>
+  </div>
+</div>
