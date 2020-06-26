@@ -83,5 +83,17 @@ getPrenotationList(){
     return this.http.post(url, prenotation, {headers: headers});
   }
 
+  getUserByPrenotation(prenotationId: number){
+  let url = "http://127.0.0.1:8181/prenotation/getUserByPrenotation/"+prenotationId;
+
+    let tokenHeader = new Headers({
+      'Content-Type' : 'application/json',
+      'x-auth-token' : localStorage.getItem("xAuthToken")
+    });
+    return this.http.get(url, {headers: tokenHeader});
+
+  }
+
 
 }
+
