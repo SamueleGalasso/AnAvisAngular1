@@ -230,5 +230,24 @@ public class PrenotationResource {
     public List<User> userListByPrenotation(){
         return userService.findAllByPrenotations();
     }
+    
+    /**
+     * Metodo utilizzato per ottenere un utente tramite l'id della propria prenotazione
+     * @param id id della prenotazione
+     * @return utente che ha come prenotazione una prenotazione con questo id
+     */
+    @RequestMapping("/getUserByPrenotation/{id}")
+    public User getUserByPrenotation(
+            @PathVariable("id") String id
+    ) {
+        if(userService.findByPrenotationId(Long.parseLong(id)) == null){
+            User user = new User();
+            user.setCitta("fake");
+            return user;
+        }else {
+            return userService.findByPrenotationId(Long.parseLong(id));
+        }
+
+    }
 
 }
