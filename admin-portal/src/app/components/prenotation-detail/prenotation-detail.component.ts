@@ -28,6 +28,7 @@ export class PrenotationDetailComponent implements OnInit {
             public prenotation:Prenotation = new Prenotation();
             public date:Date = new Date();
             public prenotationDone:boolean;
+            public user:User = new User();
             
 
 
@@ -45,6 +46,18 @@ export class PrenotationDetailComponent implements OnInit {
 
             }
 
+            getUser(prenotationId: number){
+               this.prenotationService.getUserByPrenotation(prenotationId).subscribe(
+                    res => {
+                      this.user = res.json();
+                      console.log(this.user);
+                    },
+                    error => {
+                      console.log(error.text());
+                    }
+               );
+            }
+
 
 
   ngOnInit(): void {
@@ -54,15 +67,20 @@ export class PrenotationDetailComponent implements OnInit {
 
     this.prenotationService.getPrenotation(this.prenotationId).subscribe(
       res => {
-        console.log(res.text());
         this.prenotation=res.json();
+        console.log(this.prenotation);
         this.date = this.prenotation.date;
         this.prenotationDone = false;
+        this.getUser(this.prenotation.id);
       },
       error => {
         console.log(error);
       }
     );
+
   }
 
+
+
 }
+
