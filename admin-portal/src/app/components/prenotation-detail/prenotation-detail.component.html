@@ -16,6 +16,7 @@
                         <p><strong>Available Number: </strong><span>{{date.remainingNumber}}</span></p>
                         <p><strong>Active: </strong><span>{{prenotation.active}}</span></p>
                         <p><strong>Complete: </strong><span>{{prenotation.donationDone}}</span></p>
+                        <p><strong>User: </strong><span *ngIf="user.citta == 'fake' ">This is not the current prenotation!</span><a routerLink="/viewUser/{{user.id}}"  style="cursor: pointer;">{{user.username}}</a></p>
                         <p><strong>Description: </strong><span>{{date.description}}</span></p>
                         <button mat-raised-button class="mat-warn" [disabled]="prenotation.active=='inactive'" (click)="onPrenotationDone(prenotation)">Prenotation Done</button>
                         <h4 *ngIf="prenotation.active=='inactive' && !prenotation.donationDone" style="color:red;">This Prenotation is inactive, activate it before completing the donation!</h4>
@@ -41,3 +42,4 @@
         </div>
     </div>
 </div>
+
