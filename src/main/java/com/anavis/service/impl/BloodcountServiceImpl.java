@@ -17,7 +17,6 @@ public class BloodcountServiceImpl implements BloodcountService {
     @Override
     public Bloodcount getBloodcount() {
         List<Bloodcount> bloodcountList = (List<Bloodcount>) bloodcountRepository.findAll();
-        System.out.println(bloodcountList);
         if(bloodcountList.size() == 0){
             return null;
         }
