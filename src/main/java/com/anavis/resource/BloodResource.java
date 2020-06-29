@@ -45,7 +45,6 @@ public class BloodResource {
     ) throws MessagingException {
         String blood = bloodType.substring(1, bloodType.length()-1);
         List<User> userList = userService.findAllByBloodType(blood);
-        System.out.println(userList.toString());
         for(User user : userList){
             SimpleMailMessage email = mailConstructor.bloodDeficiency(user, blood);
             mailSender.send(email);
