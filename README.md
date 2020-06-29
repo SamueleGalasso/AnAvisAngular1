@@ -41,3 +41,34 @@ Il progetto utilizza un'architettura layered costiutita da tre strati:
 - Per la mappatura degli oggetti Java in Database relazionali viene utilizzato Hibernate
 - Il database utilizzato è MySql in localhost
 
+## Iterazioni
+
+
+**Prima iterazione (dal 12/05/20 al 30/05/20):**
+- Incontro 1 -> Identificazione attori e parte dei casi d'uso
+- Incontro 2 -> Flow of events di alcuni casi d'uso
+- Incontro 3 -> Creazione class diagram e alcuni sequence diagram
+- Incontro 4 -> Revisione del diagramma dei casi d'uso
+- Incontro 5 -> Revisione del class diagram e dei sequence diagram
+- Incontro 6 -> Implementata prima configurazione del sistema
+
+**Seconda iterazione (dal 1/06/20 al 17/06/20):**
+- Incontro 1 -> Lavoro ai casi d'uso
+- Incontro 2 -> Lavoro al class diagram e ai sequence diagram
+- Incontro 3 -> Revisione di alcuni diagrammi
+- Incontro 4 -> Implementazione test casi d'uso principali
+- Incontro 5 -> Implementazione casi d'uso principali
+- Incontro 6 -> Correzione bug backend
+- Incontro 7 -> Correzione bug frontend
+
+**Terza iterazione (dal 18/06/20 al 6/07/20):**
+- Incontro 1 -> Revisione dei sequence diagram
+- Incontro 2 -> Revisione dei sequence diagram e lavoro ai casi d'uso
+- Incontro 3 -> Lavoro su ulteriori sequence diagram
+- Incontro 4 -> Revisione di alcuni diagrammi
+- Incontro 5 -> Implementazione di ulteriori test
+- Incontro 6 -> Implementazione di tutti i components del frontend
+- Incontro 7 -> Implementazione backend
+- Incontro 8 -> Revisione backend
+
+
