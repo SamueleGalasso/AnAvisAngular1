@@ -1,4 +1,19 @@
-# AnAvisIDS (master branch iterazione-1)
+<p align="center">
+  <img src="Frontend/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" style="max-width: 20%">
+</p>
+
+---
+
+<p align="center">
+<img src="https://forthebadge.com/images/badges/made-with-java.svg"/>
+<img src="https://forthebadge.com/images/badges/cc-0.svg"/><br><br>
+    <b>AnAVIS</b>, progetto realizzato in <b>Angular</b> e <b>Spring</b> per il corso di laurea <b>L-31</b> presso <b>Unicam</b>, <i>nell'anno accademico 2019/2020</i>, realizzato dagli studenti Samuele Galasso, Matteo Carosi e Giovanni Michetti per l'esame di <b>Ingegneria del Software</b>
+<a href="https://www.unicam.it/">• Unicam</a>
+<a href="https://avis.it">• AVIS</a>
+<a href="https://it.wikipedia.org/wiki/Licenza_MIT">• Licenza</a>
+<a href="https://github.com">• <img src="https://github.com/FrancisFire/AnAVIS/workflows/Spring%20Boot%20Test/badge.svg"></img></a>
+</b></p>
+
 
 Il sistema da sviluppare dovrà consentire ai donatori Avis di prenotare le donazioni on-line e di poter controllare lo storico dei risultati delle proprie prenotazioni e analisi.
 Attualmente per poter prenotare una donazione Avis, i donatori devono telefonare o recarsi in una sede la quale riferirà loro quali sono i giorni e gli orari disponibili presso quella sede; ad ogni donazione, prima del prelievo si deve compilare un modello cartaceo in cui si attestano le proprie condizioni di salute.
