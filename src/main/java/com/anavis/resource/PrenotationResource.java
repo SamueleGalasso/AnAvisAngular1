@@ -138,7 +138,6 @@ public class PrenotationResource {
 
     @RequestMapping("/bloodCount")
     public Bloodcount getBloodcount(){
-        System.out.println(bloodcountService.getBloodcount());
         return bloodcountService.getBloodcount();
     }
 
@@ -160,8 +159,6 @@ public class PrenotationResource {
         prenotation.setUser(user);
         prenotationService.save(prenotation);
         Bloodcount bloodcount = bloodcountService.getBloodcount();
-        System.out.println(prenotation);
-        System.out.println(prenotation.getUser().getGruppoSanguigno());
         if(prenotation.getUser().getGruppoSanguigno().equals("A")){
             bloodcount.setTypeA((bloodcount.getTypeA() + 1));
         }
