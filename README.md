@@ -7,7 +7,7 @@
 <p align="center">
 <img src="https://forthebadge.com/images/badges/made-with-java.svg"/>
   <img src="https://forthebadge.com/images/badges/60-percent-of-the-time-works-every-time.svg"/>
-  <img src="https://forthebadge.com/images/badges/built-with-love.svg"/>
+  <img src="https://forthebadge.com/images/badges/built-with-love.svg"/><br></br>
     <b>AnAVIS</b>, progetto realizzato in <b>Angular</b> e <b>Spring</b> per il corso di laurea <b>L-31</b> presso <b>Unicam</b>, <i>nell'anno accademico 2019/2020</i>, realizzato dagli studenti Samuele Galasso, Matteo Carosi e Giovanni Michetti per l'esame di <b>Ingegneria del Software</b>
 <a href="https://www.unicam.it/">• Unicam</a>
 <a href="https://avis.it">• AVIS</a>
