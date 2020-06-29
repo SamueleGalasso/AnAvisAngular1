@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Questa classe rappresenta gli utenti autenticati. Infatti al momento della registrazione viene creato e salvato nel db.
+ * Questa classe rappresenta gli utenti. Infatti al momento della registrazione viene creato e salvato nel db.
  */
 @Entity
 public class User implements UserDetails, Serializable{
