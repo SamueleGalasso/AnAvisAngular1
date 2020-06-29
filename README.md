@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://www.avis.it/wp-content/uploads/2018/08/avis-sos-magazine.jpg" style="width: 100%;">
+  <img src="https://www.avis.it/wp-content/uploads/2018/08/avis-sos-magazine.jpg" style="width: 50%;">
 </p>
 
 ---
