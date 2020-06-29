@@ -71,7 +71,6 @@ public class LoginResource {
      */
     @RequestMapping("/checkSession")
     public ResponseEntity checkSession() {
-        System.out.println("fatto");
         return new ResponseEntity("Session Active!", HttpStatus.OK);
     }
 
