@@ -103,6 +103,9 @@ public class PrenotationResource {
             @RequestBody String id,
             Principal principal
     )throws IOException {
+         dateService.findOne(userService.findByPrenotationId(Long.parseLong(id)).getPrenotation().getDate().getId()).get()
+                .setRemainingNumber(userService.findByPrenotationId(Long.parseLong(id))
+                        .getPrenotation().getDate().getRemainingNumber() + 1);
         prenotationService.removeOne(Long.parseLong(id), principal);
         prenotationService.removeFromDb(Long.parseLong(id));
         return new ResponseEntity("Remove Success", HttpStatus.OK);
@@ -119,8 +122,14 @@ public class PrenotationResource {
     ){
         if(userService.findByPrenotationId(Long.parseLong(id)) == null){
             prenotationService.removeFromDb(Long.parseLong(id));
+            dateService.findOne(userService.findByPrenotationId(Long.parseLong(id)).getPrenotation().getDate().getId()).get()
+                    .setRemainingNumber(userService.findByPrenotationId(Long.parseLong(id))
+                            .getPrenotation().getDate().getRemainingNumber() + 1);
             return new ResponseEntity("Remove Success Admin",HttpStatus.OK);
         }else {
+            dateService.findOne(userService.findByPrenotationId(Long.parseLong(id)).getPrenotation().getDate().getId()).get()
+                    .setRemainingNumber(userService.findByPrenotationId(Long.parseLong(id))
+                            .getPrenotation().getDate().getRemainingNumber() + 1);
         userService.findByPrenotationId(Long.parseLong(id)).setPrenotation(null);
         prenotationService.removeFromDb(Long.parseLong(id));
         return new ResponseEntity("Remove Success Admin", HttpStatus.OK);
