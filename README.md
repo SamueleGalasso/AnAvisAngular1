@@ -17,10 +17,27 @@
 
 Il sistema da sviluppare dovrà consentire ai donatori Avis di prenotare le donazioni on-line e di poter controllare lo storico dei risultati delle proprie prenotazioni e analisi.
 Attualmente per poter prenotare una donazione Avis, i donatori devono telefonare o recarsi in una sede la quale riferirà loro quali sono i giorni e gli orari disponibili presso quella sede; ad ogni donazione, prima del prelievo si deve compilare un modello cartaceo in cui si attestano le proprie condizioni di salute.
-Il sistema proposto renderebbe più veloce la pratica di prenotazione e risulterebbe più comodo per i donatori scegliere fra tutte le date e gli orari disponibili nelle varie sedi Avis. Per quanto riguarda il modello esso sarà disponibile per la compilazione on-line da parte del donatore subito dopo la registrazione al sito nel proprio profilo personale, una sorta di "cartella clinica" che di volta in volta il donatore è tenuto ad aggiornare, questa pratica permette di saltare il processo di compilazione del questionario, inoltre in questa sezione è possibile aggiornare le credenziali d'accesso tra cui password, username ed e-mail.
-Il sistema risulterebbe anche utile per verificare l’andamento delle proprie analisi del sangue che, contrariamente al funzionamento attuale, nel quale i risultati vengono inviati per posta cartacea, verrebbero caricate sullo spazio dedicato del donatore. 
-Infine il sistema permetterà di inviare una richiesta di emergenza “carenza sangue” ai donatori il cui gruppo sanguigno corrisponda con il gruppo di cui si fa richiesta, verrà inviata automaticamente dal sistema un email richiedendo la disponibilità da parte del donatore.
+Il sistema proposto propone un sistema per velocizzare e semplificare questa pratica, nel progetto alcune funzionalità sono state tralasciate concentrandosi principalmente sulla questione delle prenotazione e dell'interazione tra utenti/admin, il sistema è comunque aperto a future estensioni.
+L'utente che accede al servizio dovrà prima di tutti iscriversi al sito web, dopodichè dovrà compilare ed aggiornare il proprio profilo, inserendo tutte le informazioni utili per una ipotetica donazione, queste informazioni vengono memorizzate nel database e sarà respnsabilità del donatore tenerle aggiornate per future donazioni. Questo procedimento permette di saltare la compilazione dei vari moduli avis prima di ogni donazione. L'utente può visualizzare le date disponibili pubblicate dagli admin dal loro portale dedicato, se il numero di posti disponibile è sufficiente è possibile effettuare la prenotazione, che deve essere ora valutata e accettata da un admin. L'admin può visualizzare tutte le pending prenotation in tempo reale consultare la "cartella clinica" del donatore e valutare se accettare o meno la prenotazione, una volta confermata l'utente viene notificato. Le prenotazioni possono essere cancellate in qualsiasi momento sia dagli admin che dagli utenti stessi. Quando la donazione viene effettuata, l'addetto avis (admin) deve segnare la prenotazione come completata, facendo così viene resa "inactive" e completata aggiungendo al deposito della sede il tipo di sangue donato. Gli addetti avis (admin) hanno a disposizione altre funzionalità tra cui visualizzare tutti i donatori e le relative informazioni, aggiungere e modificare/eliminare date di prenotazione, visualizzare la quantità di sangue disponibile nei depositi divisi per tipo inoltre è possibile in casi di emergenza inviare una richiesta di "carenza di sangue" (selezionando il tipo) a tutti gli utenti invitandoli a donare e informandoli della situazione di emergenza.
 
-Gli admin (responsabili avis/dottori) avranno la possibilità di controllare lo storico delle analisi dei propri pazienti per avere un quadro clinico più completo e prenotare i prossimi esami del sangue che essi dovranno effettuare.
-Le sedi Avis risparmieranno tempo in quanto interagiranno con il sistema solo per inserire gli orari e le date disponibili per le donazioni, senza più occuparsi direttamente delle prenotazioni che vedranno in un elenco. Allo stesso tempo le sedi AVIS avranno a disposizione una “dashboard” che permetterà di visualizzare gestire al meglio il sistema lato admin, quindi visualizzare/modificare date e prenotazioni disponibili, vedere gli utenti che hanno effettuato prenotazioni ecc.
+## Tecnologie e struttura del progetto
+
+Il progetto utilizza un'architettura layered costiutita da tre strati:
+
+#### Backend:
+
+- Il framework utilizzato è Spring Boot
+- Il carico del lavoro è stato suddiviso usando Controller, Service, Repository ed Entity permettendo cosi di ottimizzare le responsabilità
+- Fornisce chiamate API REST per l'interazione con il frontend
+- L'autenticazione e l'autorizzazione sono implementati tramite Spring Security e attraverso l'utilizzo di token JWT
+
+#### Frontend:
+
+- Il framework utilizzato è Angular
+- Le chiamate al backend vengono intercettate e rese sicure JWT
+
+#### Persistenza
+
+- Per la mappatura degli oggetti Java in Database relazionali viene utilizzato Hibernate
+- Il database utilizzato è MySql in localhost
 
