@@ -19,7 +19,7 @@ public class DateServiceImpl implements DateService {
 
     @Autowired
     private DateRepository dateRepository;
-
+    @Override
     public List<Date> findAll() {
         List<Date> dateList = (List<Date>) dateRepository.findAll();
 
@@ -33,17 +33,28 @@ public class DateServiceImpl implements DateService {
 
         return activeDateList;
     }
-
+    @Override
     public Optional<Date> findOne(Long id) {
         return dateRepository.findById(id);
     }
-
+    @Override
     public Date save(Date date) {
         return dateRepository.save(date);
     }
 
 
+    @Override
     public void removeOne(Long id) {
+        Date date = dateRepository.findById(id).get();
+        Set<Prenotation> prenotationList = new HashSet<>();
+        prenotationList = date.getPrenotations();
+        for(Prenotation prenotation: prenotationList){
+            User user = userService.findByPrenotationId(prenotation.getId());
+            prenotationService.removeFromUser(id, user);
+            prenotationService.removeFromDb(prenotation.getId());
+        }
+
+
         dateRepository.deleteById(id);
     }
 
