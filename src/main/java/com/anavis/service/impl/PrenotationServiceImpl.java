@@ -85,6 +85,12 @@ public class PrenotationServiceImpl implements PrenotationService {
         List<Prenotation> prenotationList = (List<Prenotation>) prenotationRepository.findAll();
         return prenotationList;
     }
+    
+    @Override
+    public void removeFromUser(Long id, User user){
+        User user1 = userService.findById(user.getId()).get();
+        user.setPrenotation(null);
+    }
 
 
 
