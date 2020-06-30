@@ -91,7 +91,7 @@ public class PrenotationResource {
         return prenotation;
     }
 
-    /**
+     /**
      * Metodo utilizzato da un utente autenticato per rimuovere una prenotazione effettuata precedentemente
      * @param id id della prenotazione
      * @param principal utente attualmente autenticato e loggato (currentUser)
@@ -103,12 +103,20 @@ public class PrenotationResource {
             @RequestBody String id,
             Principal principal
     )throws IOException {
-         dateService.findOne(userService.findByPrenotationId(Long.parseLong(id)).getPrenotation().getDate().getId()).get()
-                .setRemainingNumber(userService.findByPrenotationId(Long.parseLong(id))
-                        .getPrenotation().getDate().getRemainingNumber() + 1);
-        prenotationService.removeOne(Long.parseLong(id), principal);
-        prenotationService.removeFromDb(Long.parseLong(id));
-        return new ResponseEntity("Remove Success", HttpStatus.OK);
+        //se la prenotazione salvata nell'user è diversa da quella che vogliamo eliminare
+        if(userService.findByUsername(principal.getName()).getPrenotation().getId() != Long.parseLong(id)){
+            prenotationService.findOne(Long.parseLong(id)).get().getDate().setRemainingNumber(
+                    prenotationService.findOne(Long.parseLong(id)).get().getDate().getRemainingNumber() + 1);
+            prenotationService.removeFromDb(Long.parseLong(id));
+            return new ResponseEntity("Remove Success", HttpStatus.OK);
+        }else {
+            dateService.findOne(userService.findByPrenotationId(Long.parseLong(id)).getPrenotation().getDate().getId()).get()
+                    .setRemainingNumber(userService.findByPrenotationId(Long.parseLong(id))
+                            .getPrenotation().getDate().getRemainingNumber() + 1);
+            prenotationService.removeOne(Long.parseLong(id), principal);
+            prenotationService.removeFromDb(Long.parseLong(id));
+            return new ResponseEntity("Remove Success", HttpStatus.OK);
+        }
     }
 
     /**
@@ -135,7 +143,6 @@ public class PrenotationResource {
         return new ResponseEntity("Remove Success Admin", HttpStatus.OK);
         }
     }
-
     @RequestMapping("/bloodCount")
     public Bloodcount getBloodcount(){
         return bloodcountService.getBloodcount();
