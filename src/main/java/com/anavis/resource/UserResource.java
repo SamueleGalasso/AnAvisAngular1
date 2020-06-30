@@ -228,20 +228,20 @@ public class UserResource {
 
     public void checkUserInfo1(String codiceFiscale, String stringPhone, String firstName, User currentUser){
         //se il form viene lasciato vuoto salvo il codice fiscale precedente
-        if(codiceFiscale == null || codiceFiscale == null){
+        if(codiceFiscale == null || codiceFiscale.equals("")){
             currentUser.setCodiceFiscale(currentUser.getCodiceFiscale());
         } else {
             currentUser.setCodiceFiscale(codiceFiscale);
         }
 
         //se il form viene lasciato vuoto salvo il numero di telefono precedente
-        if(stringPhone == null || stringPhone == null){
+        if(stringPhone == null || stringPhone.equals("")){
             currentUser.setPhone(currentUser.getPhone());
         } else {
             currentUser.setPhone(stringPhone);
         }
 
-        if(firstName == null || firstName == null){
+        if(firstName == null || firstName.equals("")){
             currentUser.setFirstName(currentUser.getFirstName());
         }else{
             currentUser.setFirstName(firstName);
