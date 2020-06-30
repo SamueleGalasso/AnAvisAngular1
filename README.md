@@ -71,4 +71,8 @@ Il progetto utilizza un'architettura layered costiutita da tre strati:
 - Incontro 7 -> Implementazione backend
 - Incontro 8 -> Revisione backend
 
+## Responsabilità
+-Frontend: Interamente realizzato da Samuele Galasso;
+-Backend: realizzato da Giovanni Michetti, Matteo Carosi, Samuele Galasso.
+
 
