@@ -29,6 +29,7 @@ export class PrenotationDetailComponent implements OnInit {
             public date:Date = new Date();
             public prenotationDone:boolean;
             public user:User = new User();
+	    public noBloodType:boolean;
             
 
 
@@ -40,6 +41,7 @@ export class PrenotationDetailComponent implements OnInit {
                     },
                     error=>{
                     console.log(error.text());
+			    if(error.text() === "No Blood Type!") this.noBloodType = true;
                     }
                  );
                 
