@@ -148,7 +148,7 @@ public class PrenotationResource {
         return bloodcountService.getBloodcount();
     }
 
-    /**
+   /**
      * Metodo utilizzato per indicare che una prenotazione è terminata, cioè la donazione è stata effettuata.
      * @param prenotation la prenotazione effettuata
      * @return response entity 200 ok!
@@ -161,11 +161,16 @@ public class PrenotationResource {
         if(user == null){
             return new ResponseEntity("No User Found!",HttpStatus.BAD_REQUEST);
         }
+        prenotation.setUser(user);
+        if(prenotation.getUser().getGruppoSanguigno() == null){
+            return new ResponseEntity("No Blood Type!", HttpStatus.BAD_REQUEST);
+        }
         prenotation.setActive("inactive");
         prenotation.setDonationDone(true);
         prenotation.setUser(user);
         prenotationService.save(prenotation);
         Bloodcount bloodcount = bloodcountService.getBloodcount();
+
         if(prenotation.getUser().getGruppoSanguigno().equals("A")){
             bloodcount.setTypeA((bloodcount.getTypeA() + 1));
         }
