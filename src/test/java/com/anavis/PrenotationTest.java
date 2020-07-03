@@ -79,15 +79,8 @@ public class PrenotationTest {
         user1.setGruppoSanguigno("A");
         user1.setUsername("pippo1");
         date = new Date();
-        date.setPlace("SBT");
-        date.setPrenotationDate("2020-12-11");
-        date.setActive(true);
-        date.setDescription("Test1");
-        date.setRemainingNumber(12);
-        dateResource.addDatePost(date);
         prenotation1 = new Prenotation();
         prenotation1.setPrenotationStatus("createdTest1");
-        prenotation1.setDate(date);
         prenotation1.setUser(user1);
         prenotation1.setActive("active");
         user1.setPrenotation(prenotation1);
@@ -96,16 +89,8 @@ public class PrenotationTest {
         user2 = new User();
         user2.setGruppoSanguigno("A");
         user2.setUsername("pippo2");
-        date2 = new Date();
-        date2.setPlace("SBT");
-        date2.setPrenotationDate("2020-12-11");
-        date2.setActive(true);
-        date2.setDescription("Test2");
-        date2.setRemainingNumber(12);
-        dateResource.addDatePost(date2);
         prenotation2 = new Prenotation();
         prenotation2.setPrenotationStatus("createdTest2");
-        prenotation2.setDate(date2);
         prenotation2.setUser(user2);
         user2.setPrenotation(prenotation2);
         userService.save(user2);
@@ -120,10 +105,6 @@ public class PrenotationTest {
         userService.remove(user1.getId());
         userService.remove(user2.getId());
         userService.remove(user3.getId());
-        dateService.removeOne(date.getId());
-        dateService.removeOne(date2.getId());
-
-
     }
 
     @Test
@@ -134,8 +115,6 @@ public class PrenotationTest {
         userService.remove(user1.getId());
         userService.remove(user2.getId());
         userService.remove(user3.getId());
-        dateService.removeOne(date.getId());
-        dateService.removeOne(date2.getId());
     }
 
     @Test
@@ -146,8 +125,6 @@ public class PrenotationTest {
         userService.remove(user1.getId());
         userService.remove(user2.getId());
         userService.remove(user3.getId());
-        dateService.removeOne(date.getId());
-        dateService.removeOne(date2.getId());
         assertEquals(prenotationService.findOne(prenotation1.getId()).isPresent(), false);
     }
 
@@ -155,14 +132,14 @@ public class PrenotationTest {
     public void prenotationDone(){
         prenotationResource.prenotationDone(this.prenotation1);
         assertEquals(this.prenotation1.isDonationDone(), true);
-        prenotationResource.removeAdmin(this.prenotation1.getId().toString());
-        prenotationResource.removeAdmin(this.prenotation2.getId().toString());
+        prenotationService.removeFromDb(this.prenotation1.getId());
+        prenotationService.removeFromDb(this.prenotation2.getId());
+        prenotationService.removeFromUser(this.prenotation2.getId(), this.user2);
+        prenotationService.removeFromUser(this.prenotation1.getId(),this.user1);
 
         userService.remove(user1.getId());
         userService.remove(user2.getId());
         userService.remove(user3.getId());
-        dateService.removeOne(date.getId());
-        dateService.removeOne(date2.getId());
     }
 
     @Test
@@ -174,14 +151,14 @@ public class PrenotationTest {
                 filteredList.add(prenotation);
             }
         }
-        prenotationResource.removeAdmin(this.prenotation1.getId().toString());
-        prenotationResource.removeAdmin(this.prenotation2.getId().toString());
+        prenotationService.removeFromDb(this.prenotation1.getId());
+        prenotationService.removeFromDb(this.prenotation2.getId());
+        prenotationService.removeFromUser(this.prenotation2.getId(), this.user2);
+        prenotationService.removeFromUser(this.prenotation1.getId(),this.user1);
 
         userService.remove(user1.getId());
         userService.remove(user2.getId());
         userService.remove(user3.getId());
-        dateService.removeOne(date.getId());
-        dateService.removeOne(date2.getId());
         assertEquals(filteredList.size(), 2);
     }
 
@@ -189,14 +166,14 @@ public class PrenotationTest {
     public void checkPrenotation() throws MessagingException {
         prenotationResource.checkPrenotation(this.prenotation1);
         assertEquals(this.prenotation1.getActive(), "inactive");
-        prenotationResource.removeAdmin(this.prenotation1.getId().toString());
-        prenotationResource.removeAdmin(this.prenotation2.getId().toString());
+        prenotationService.removeFromDb(this.prenotation1.getId());
+        prenotationService.removeFromDb(this.prenotation2.getId());
+        prenotationService.removeFromUser(this.prenotation2.getId(), this.user2);
+        prenotationService.removeFromUser(this.prenotation1.getId(),this.user1);
 
         userService.remove(user1.getId());
         userService.remove(user2.getId());
         userService.remove(user3.getId());
-        dateService.removeOne(date.getId());
-        dateService.removeOne(date2.getId());
     }
 
     @Test
@@ -209,14 +186,14 @@ public class PrenotationTest {
                 filteredList.add(user);
             }
         }
-        prenotationResource.removeAdmin(this.prenotation1.getId().toString());
-        prenotationResource.removeAdmin(this.prenotation2.getId().toString());
+        prenotationService.removeFromDb(this.prenotation1.getId());
+        prenotationService.removeFromDb(this.prenotation2.getId());
+        prenotationService.removeFromUser(this.prenotation2.getId(), this.user2);
+        prenotationService.removeFromUser(this.prenotation1.getId(),this.user1);
 
         userService.remove(user1.getId());
         userService.remove(user2.getId());
         userService.remove(user3.getId());
-        dateService.removeOne(date.getId());
-        dateService.removeOne(date2.getId());
         assertEquals(filteredList.size(), 2);
 
     }
@@ -224,3 +201,4 @@ public class PrenotationTest {
 
 
 }
+
