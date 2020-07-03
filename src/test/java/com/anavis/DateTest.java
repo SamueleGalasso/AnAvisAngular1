@@ -3,6 +3,7 @@ package com.anavis;
 import com.anavis.domain.Date;
 import com.anavis.resource.DateResource;
 import com.anavis.service.DateService;
+import org.hibernate.Hibernate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +47,8 @@ public class DateTest {
         date2.setRemainingNumber(10);
         dateResource.addDatePost(date);
         dateResource.addDatePost(date2);
+        Hibernate.initialize(date.getPrenotations());
+        Hibernate.initialize(date2.getPrenotations());
     }
 
 
