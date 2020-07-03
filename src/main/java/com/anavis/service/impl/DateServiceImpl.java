@@ -45,13 +45,15 @@ public class DateServiceImpl implements DateService {
 
     @Override
     public void removeOne(Long id) {
-        Date date = dateRepository.findById(id).get();
-        Set<Prenotation> prenotationList = new HashSet<>();
-        prenotationList = date.getPrenotations();
-        for(Prenotation prenotation: prenotationList){
-            User user = userService.findByPrenotationId(prenotation.getId());
-            prenotationService.removeFromUser(id, user);
-            prenotationService.removeFromDb(prenotation.getId());
+        Date date = dateRepository.findById(id).orElse(null);
+        Set<Prenotation> prenotationList;
+        if(date.getPrenotations() != null) {
+            prenotationList = date.getPrenotations();
+            for (Prenotation prenotation : prenotationList) {
+                User user = userService.findByPrenotationId(prenotation.getId());
+                prenotationService.removeFromUser(id, user);
+                prenotationService.removeFromDb(prenotation.getId());
+            }
         }
 
 
