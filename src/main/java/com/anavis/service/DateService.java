@@ -18,6 +18,5 @@ public interface DateService {
     void removeOne(Long id);
     //factory method
     Date newDate();
-    //set prenotations
-    Prenotation setPrenotations(Prenotation prenotation);
+    
 }
