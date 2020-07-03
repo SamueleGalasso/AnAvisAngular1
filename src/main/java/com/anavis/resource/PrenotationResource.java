@@ -118,8 +118,7 @@ public class PrenotationResource {
             return new ResponseEntity("Remove Success", HttpStatus.OK);
         }
     }
-
-    /**
+/**
      * Serve per rimuovere una prenotazione, nel caso in cui un'addetto voglia eliminare una prenotazione.
      * @param id id della prenotazione
      * @return response entity status code 200, ok!
@@ -134,7 +133,11 @@ public class PrenotationResource {
                     .setRemainingNumber(userService.findByPrenotationId(Long.parseLong(id))
                             .getPrenotation().getDate().getRemainingNumber() + 1);
             return new ResponseEntity("Remove Success Admin",HttpStatus.OK);
-        }else {
+        }else if(prenotationService.findOne(Long.parseLong(id)).get().getDate() == null){
+            prenotationService.removeFromDb(Long.parseLong(id));
+            userService.findByPrenotationId(Long.parseLong(id)).setPrenotation(null);
+            return new ResponseEntity("Remove Success Admin", HttpStatus.OK);
+        } else{
             dateService.findOne(userService.findByPrenotationId(Long.parseLong(id)).getPrenotation().getDate().getId()).get()
                     .setRemainingNumber(userService.findByPrenotationId(Long.parseLong(id))
                             .getPrenotation().getDate().getRemainingNumber() + 1);
@@ -143,6 +146,10 @@ public class PrenotationResource {
         return new ResponseEntity("Remove Success Admin", HttpStatus.OK);
         }
     }
+    /**
+     * Metodo utilizzato per prendere dal db l'oggetto bloodcount
+     * @return l'oggetto bloodcount
+     */
     @RequestMapping("/bloodCount")
     public Bloodcount getBloodcount(){
         return bloodcountService.getBloodcount();
