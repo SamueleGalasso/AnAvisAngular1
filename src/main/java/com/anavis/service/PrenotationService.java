@@ -15,8 +15,6 @@ public interface PrenotationService {
     List<Prenotation> findAll(Principal principal);
     //cerca nel db e ritorna una particolare prenotazione in base all'id che gli viene passato.
     Optional<Prenotation> findOne(Long id);
-    //rimuove dall'utente una particolare prenotazione tramite id
-    void removeOne(Long id, Principal principal);
     //rimuove dal db una particolare prenotazione tramite id
     void removeFromDb(Long id);
     //factory method
