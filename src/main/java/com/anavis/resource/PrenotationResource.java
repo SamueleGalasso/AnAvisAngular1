@@ -127,12 +127,14 @@ public class PrenotationResource {
     public ResponseEntity removeAdmin(
             @RequestBody String id
     ){
+        //se la prenotazione da rimuovere non è quella corrente di nessun user
         if(userService.findByPrenotationId(Long.parseLong(id)) == null){
             prenotationService.removeFromDb(Long.parseLong(id));
             dateService.findOne(userService.findByPrenotationId(Long.parseLong(id)).getPrenotation().getDate().getId()).get()
                     .setRemainingNumber(userService.findByPrenotationId(Long.parseLong(id))
                             .getPrenotation().getDate().getRemainingNumber() + 1);
             return new ResponseEntity("Remove Success Admin",HttpStatus.OK);
+            //se la prenotazione ha la data nulla (implementato per i test)
         }else if(prenotationService.findOne(Long.parseLong(id)).get().getDate() == null){
             prenotationService.removeFromDb(Long.parseLong(id));
             userService.findByPrenotationId(Long.parseLong(id)).setPrenotation(null);
