@@ -268,8 +268,7 @@ public class PrenotationResource {
             @PathVariable("id") String id
     ) {
         if(userService.findByPrenotationId(Long.parseLong(id)) == null){
-            User user = new User();
-            user.setCitta("fake");
+            User user = userService.newUser();
             return user;
         }else {
             return userService.findByPrenotationId(Long.parseLong(id));
