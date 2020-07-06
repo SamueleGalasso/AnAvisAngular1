@@ -31,8 +31,6 @@ import java.util.Optional;
 @RequestMapping("/prenotation")
 public class PrenotationResource {
 
-    private Prenotation prenotation = new Prenotation();
-
     @Autowired
     private DateService dateService;
 
@@ -72,8 +70,6 @@ public class PrenotationResource {
         dateService.setPrenotations(prenotation);
 
         user.setPrenotation(prenotation);
-
-        this.prenotation = prenotation;
 
         return prenotation;
 
