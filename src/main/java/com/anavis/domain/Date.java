@@ -28,7 +28,7 @@ public class Date implements Serializable {
     @Column(columnDefinition = "text")
     private String description;
 
-    @OneToMany(mappedBy = "date", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "date", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Prenotation> prenotations = new HashSet<>();
 

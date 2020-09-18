@@ -25,5 +25,6 @@ public interface PrenotationService {
     Prenotation newPrenotation();
     //ritorna la lista di tutte le prenotazioni presenti nel db
     List<Prenotation> findAll();
+    void removeFromUser(Long id, User user);
 
 }

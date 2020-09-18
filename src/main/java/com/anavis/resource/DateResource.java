@@ -2,6 +2,8 @@ package com.anavis.resource;
 
 import com.anavis.domain.Date;
 import com.anavis.service.DateService;
+import com.anavis.service.PrenotationService;
+import com.anavis.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,10 @@ public class DateResource {
 
     @Autowired
     private DateService dateService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private PrenotationService prenotationService;
 
 
     /**
@@ -61,8 +67,8 @@ public class DateResource {
      */
     @RequestMapping("{id}")
     public Optional<Date> getDate(@PathVariable("id") Long id){
-        Optional<Date> prenotation = dateService.findOne(id);
-        return prenotation;
+        Optional<Date> date = dateService.findOne(id);
+        return date;
     }
 
     /**

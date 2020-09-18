@@ -4,6 +4,7 @@ import com.anavis.domain.Bloodcount;
 import com.anavis.domain.Date;
 import com.anavis.domain.Prenotation;
 import com.anavis.domain.User;
+import com.anavis.repository.PrenotationRepository;
 import com.anavis.service.BloodcountService;
 import com.anavis.service.DateService;
 import com.anavis.service.PrenotationService;
@@ -31,8 +32,6 @@ import java.util.Optional;
 @RequestMapping("/prenotation")
 public class PrenotationResource {
 
-    private Prenotation prenotation = new Prenotation();
-
     @Autowired
     private DateService dateService;
 
@@ -41,6 +40,9 @@ public class PrenotationResource {
 
     @Autowired
     private PrenotationService prenotationService;
+
+    @Autowired
+    private PrenotationRepository prenotationRepository;
 
     @Autowired
     private MailConstructor mailConstructor;
@@ -73,11 +75,7 @@ public class PrenotationResource {
 
         user.setPrenotation(prenotation);
 
-        this.prenotation = prenotation;
-
         return prenotation;
-
-
     }
 
     /**
@@ -103,9 +101,32 @@ public class PrenotationResource {
             @RequestBody String id,
             Principal principal
     )throws IOException {
-        prenotationService.removeOne(Long.parseLong(id), principal);
-        prenotationService.removeFromDb(Long.parseLong(id));
-        return new ResponseEntity("Remove Success", HttpStatus.OK);
+        User user = userService.findByPrenotationId(Long.parseLong(id));
+        //se la prenotazione da eliminare non è quella corrente dell'user
+        if(user == null) {
+            prenotationService.removeFromDb(Long.parseLong(id));
+            System.out.println(Long.parseLong(id));
+            return new ResponseEntity("Remove Success Admin", HttpStatus.OK);
+        }
+        //se la prenotazione salvata nell'user è diversa da quella che vogliamo eliminare
+        else if(userService.findByUsername(principal.getName()).getPrenotation().getId() != Long.parseLong(id)){
+            prenotationService.removeFromDb(Long.parseLong(id));
+            System.out.println("secondo caso");
+            return new ResponseEntity("Remove Success", HttpStatus.OK);
+            //se la prenotazione che vogliamo eliminare è quella corrente di un user, in questo caso dell'user loggato e autenticato
+       }
+       else
+        {
+            dateService.findOne(userService.findByPrenotationId(Long.parseLong(id)).getPrenotation().getDate().getId()).get()
+                    .setRemainingNumber(userService.findByPrenotationId(Long.parseLong(id))
+                            .getPrenotation().getDate().getRemainingNumber() + 1);
+
+            prenotationService.removeFromUser(Long.parseLong(id), user);
+            prenotationService.removeFromDb(Long.parseLong(id));
+            System.out.println("terzo caso");
+
+            return new ResponseEntity("Remove Success", HttpStatus.OK);
+        }
     }
 
     /**
@@ -117,19 +138,36 @@ public class PrenotationResource {
     public ResponseEntity removeAdmin(
             @RequestBody String id
     ){
-        if(userService.findByPrenotationId(Long.parseLong(id)) == null){
+        //se la prenotazione da eliminare non è quella corrente dell'user
+        if(prenotationService.findOne(Long.parseLong(id)).get().getUser() == null) {
             prenotationService.removeFromDb(Long.parseLong(id));
-            return new ResponseEntity("Remove Success Admin",HttpStatus.OK);
-        }else {
+            dateService.findOne(userService.findByPrenotationId(Long.parseLong(id)).getPrenotation().getDate().getId()).get()
+                    .setRemainingNumber(userService.findByPrenotationId(Long.parseLong(id))
+                            .getPrenotation().getDate().getRemainingNumber() + 1);
+            return new ResponseEntity("Remove Success Admin", HttpStatus.OK);
+
+            //se la prenotazione non ha una data (servito per i test)
+        }else if(prenotationService.findOne(Long.parseLong(id)).get().getDate() == null){
+            prenotationService.removeFromDb(Long.parseLong(id));
+            userService.findByPrenotationId(Long.parseLong(id)).setPrenotation(null);
+            return new ResponseEntity("Remove Success Admin", HttpStatus.OK);
+        } else{
+            //eliminazione di una prenotazione corrente di un utente
+            dateService.findOne(userService.findByPrenotationId(Long.parseLong(id)).getPrenotation().getDate().getId()).get()
+                    .setRemainingNumber(userService.findByPrenotationId(Long.parseLong(id))
+                            .getPrenotation().getDate().getRemainingNumber() + 1);
         userService.findByPrenotationId(Long.parseLong(id)).setPrenotation(null);
         prenotationService.removeFromDb(Long.parseLong(id));
         return new ResponseEntity("Remove Success Admin", HttpStatus.OK);
         }
     }
 
+    /**
+     * Metodo utilizzato per prendere dal db l'oggetto bloodcount
+     * @return l'oggetto bloodcount
+     */
     @RequestMapping("/bloodCount")
     public Bloodcount getBloodcount(){
-        System.out.println(bloodcountService.getBloodcount());
         return bloodcountService.getBloodcount();
     }
 
@@ -146,13 +184,16 @@ public class PrenotationResource {
         if(user == null){
             return new ResponseEntity("No User Found!",HttpStatus.BAD_REQUEST);
         }
+        prenotation.setUser(user);
+        if(prenotation.getUser().getGruppoSanguigno() == null){
+            return new ResponseEntity("No Blood Type!", HttpStatus.BAD_REQUEST);
+        }
         prenotation.setActive("inactive");
         prenotation.setDonationDone(true);
         prenotation.setUser(user);
         prenotationService.save(prenotation);
         Bloodcount bloodcount = bloodcountService.getBloodcount();
-        System.out.println(prenotation);
-        System.out.println(prenotation.getUser().getGruppoSanguigno());
+
         if(prenotation.getUser().getGruppoSanguigno().equals("A")){
             bloodcount.setTypeA((bloodcount.getTypeA() + 1));
         }
@@ -229,6 +270,24 @@ public class PrenotationResource {
     @RequestMapping("/prenotationUserList")
     public List<User> userListByPrenotation(){
         return userService.findAllByPrenotations();
+    }
+
+    /**
+     * Metodo utilizzato per ottenere un utente tramite l'id della propria prenotazione
+     * @param id id della prenotazione
+     * @return utente che ha come prenotazione una prenotazione con questo id
+     */
+    @RequestMapping("/getUserByPrenotation/{id}")
+    public User getUserByPrenotation(
+            @PathVariable("id") String id
+    ) {
+        if(userService.findByPrenotationId(Long.parseLong(id)) == null){
+            User user = userService.newUser();
+            return user;
+        }else {
+            return userService.findByPrenotationId(Long.parseLong(id));
+        }
+
     }
 
 }

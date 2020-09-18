@@ -28,8 +28,6 @@ public class LoginResource {
      */
     @RequestMapping("/token")
     public Map<String, String> token(HttpSession session, HttpServletRequest request) {
-
-
         System.out.println(request.getRemoteHost());
 
         String remoteHost = request.getRemoteHost();
@@ -49,8 +47,6 @@ public class LoginResource {
      */
     @RequestMapping("/token/admin")
     public Map<String, String> tokenAdmin(HttpSession session, HttpServletRequest request) {
-
-
         System.out.println(request.getRemoteHost());
 
         String remoteHost = request.getRemoteHost();
@@ -69,7 +65,6 @@ public class LoginResource {
      */
     @RequestMapping("/checkSession")
     public ResponseEntity checkSession() {
-        System.out.println("fatto");
         return new ResponseEntity("Session Active!", HttpStatus.OK);
     }
 

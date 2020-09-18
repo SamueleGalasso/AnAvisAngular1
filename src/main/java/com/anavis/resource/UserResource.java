@@ -16,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Email;
 import java.security.Principal;
 import java.util.*;
@@ -51,7 +50,6 @@ public class UserResource {
      */
     @RequestMapping(value="/newUser", method=RequestMethod.POST)
     public ResponseEntity newUserPost(
-            HttpServletRequest request,
             @RequestBody HashMap<String, String> mapper
     ) throws Exception {
         //qui memorizzo il body della request cioè l'username e l'email inseriti nel form
@@ -228,20 +226,20 @@ public class UserResource {
 
     public void checkUserInfo1(String codiceFiscale, String stringPhone, String firstName, User currentUser){
         //se il form viene lasciato vuoto salvo il codice fiscale precedente
-        if(codiceFiscale == null || codiceFiscale == null){
+        if(codiceFiscale == null || codiceFiscale.equals("")){
             currentUser.setCodiceFiscale(currentUser.getCodiceFiscale());
         } else {
             currentUser.setCodiceFiscale(codiceFiscale);
         }
 
         //se il form viene lasciato vuoto salvo il numero di telefono precedente
-        if(stringPhone == null || stringPhone == null){
+        if(stringPhone == null || stringPhone.equals("")){
             currentUser.setPhone(currentUser.getPhone());
         } else {
             currentUser.setPhone(stringPhone);
         }
 
-        if(firstName == null || firstName == null){
+        if(firstName == null || firstName.equals("")){
             currentUser.setFirstName(currentUser.getFirstName());
         }else{
             currentUser.setFirstName(firstName);
@@ -299,7 +297,7 @@ public class UserResource {
     public User getCurrentUser(Principal principal){
         User user = userService.newUser();
         //se principal è diverso da null, quindi c'è un utente loggato
-        if(null != principal) {
+        if(principal != null) {
              user = userService.findByUsername(principal.getName());
         }
         //se non entro nell'if ritorno un user vuoto
