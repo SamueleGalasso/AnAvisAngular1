@@ -1,0 +1,51 @@
+<div class="container">
+    
+    <div class="row">
+        <div class="row" style="margin-top: 120px;">
+            <div class="col-xs-3" style="margin-top: -50px;">
+                <a routerLink="/userList">Back to user list</a>
+                <br />
+                
+            </div>
+            <div class="col-xs-9">
+                
+                <div class="row">
+                    <div class="col-xs-5">
+                        <p><strong>Firstname: </strong><span>{{user.firstName}}</span></p>
+                        <p><strong>Lastname: </strong><span>{{user.lastName}}</span></p>
+                        <p><strong>Username: </strong><span>{{user.username}}</span></p>
+                        <p><strong>Blood Type: </strong><span>{{user.gruppoSanguigno}}</span></p>
+                        <p><strong>Birth Date: </strong><span>{{user.birthDate}}</span></p>
+                        <p><strong>City: </strong><span>{{user.citta}}</span></p>
+                        <p><strong>Country: </strong><span>{{user.paese}}</span></p>
+                        <p><strong>Email: </strong><span>{{user.email}}</span></p>
+                        <p><strong>Codice Fiscale: </strong><span>{{user.codiceFiscale}}</span></p>
+                        <p><strong>Phone Number: </strong><span>{{user.phone}}</span></p>
+                        <p><strong>Active: </strong><span>{{user.enabled}}</span></p>
+                        <p><strong>Last Prenotation: </strong><span *ngIf="user.prenotation == null">No prenotation.</span><span><a routerLink="/viewPrenotation/{{user.prenotation.id}}"  style="cursor: pointer;">view Prenotation</a></span></p>
+                        <p><strong>Extra Info: </strong><span>{{user.extraUserInfo}}</span></p>
+                        
+                        
+                        
+                     
+                         
+
+                    </div>
+                    <div class="col-xs-7">
+                        <div class="panel panel-default" style="border-width:5px; margin-top:20px;">
+                            <div class="panel-body">
+                                <div class="col-xs-6">
+                                    
+            				
+            				</div>
+            			</div>
+            				
+            			</div>
+            		</div>
+            	</div>
+            </div>
+
+            <hr />
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="container">
+
+  <div class="table-responsive" style="margin-top: 30px">
+    <table id="dateListTable" class="table bordered highlight">
+      <thead>
+        <tr>
+          
+          
+          <th>Place</th>
+          <th>Date</th>
+          <th>Active</th>
+          <th>Donation Done</th>
+          <th>Check</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor = "let prenotation of prenotationList">
+  
+          <td>
+            <a (click)="onSelect(prenotation)"  style="cursor: pointer;">{{prenotation.date.place}}</a>
+          </td>
+          
+          <td>{{prenotation.date.prenotationDate}}</td>
+          <td>{{prenotation.active}}</td>
+          <td>{{prenotation.donationDone}}</td>
+          
+
+          <td>
+            <input hidden="hidden" name="id"/>
+            <button mat-button (click)="onCheckOne(prenotation)" [disabled]="prenotation.donationDone"><span class="fa fa-times"></span> check</button>
+          </td>
+         
+          
+          <td>
+            <input hidden="hidden" name="id"/>
+            <button mat-button (click)="onRemoveOne(prenotation)" value="delete"><span class="fa fa-times"></span> delete</button>
+          </td>
+
+          
+          
+         
+        </tr>
+
+      </tbody>
+
+    </table>
+    <h4 *ngIf="noUserFound" style="color:red;">This is not the User's current prenotation, this prenotation cannot be activated!</h4>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="container">
+    
+    <div class="row">
+        <div class="row" style="margin-top: 120px;">
+            <div class="col-xs-3" style="margin-top: -50px;">
+                <a routerLink="/prenotationList">Back to prenotation list</a>
+                <br />
+                
+            </div>
+            <div class="col-xs-9">
+                
+                <div class="row">
+                    <div class="col-xs-5">
+                        <h3><strong>Place: </strong><span>{{date.place}}</span></h3>
+                        <p><strong>Prenotation Date: </strong><span>{{date.prenotationDate}}</span></p>
+                        <p><strong>Available Number: </strong><span>{{date.remainingNumber}}</span></p>
+                        <p><strong>Active: </strong><span>{{prenotation.active}}</span></p>
+                        <p><strong>Complete: </strong><span>{{prenotation.donationDone}}</span></p>
+                        <p><strong>User: </strong><span *ngIf="user.citta == 'fake' ">This is not the current prenotation!</span><a routerLink="/viewUser/{{user.id}}"  style="cursor: pointer;">{{user.username}}</a></p>
+                        <p><strong>Description: </strong><span>{{date.description}}</span></p>
+                        <button mat-raised-button class="mat-warn" [disabled]="prenotation.active=='inactive'" (click)="onPrenotationDone(prenotation)">Prenotation Done</button>
+                        <h4 *ngIf="noBloodType" style="color:red;">The User didn't select a blood type, this operation can't be completed!</h4>
+                        <h4 *ngIf="prenotation.active=='inactive' && !prenotation.donationDone" style="color:red;">This Prenotation is inactive, activate it before completing the donation!</h4>
+                         <h4 *ngIf="prenotation.donationDone || prenotationDone" style="color:green;">This Prenotation is completed.</h4>
+                         
+
+                    </div>
+                    <div class="col-xs-7">
+                        <div class="panel panel-default" style="border-width:5px; margin-top:20px;">
+                            <div class="panel-body">
+                                <div class="col-xs-6">
+                                    
+            				
+            				</div>
+            			</div>
+            				
+            			</div>
+            		</div>
+            	</div>
+            </div>
+
+            <hr />
+        </div>
+    </div>
+</div>
+
