@@ -1,0 +1,161 @@
+
+<div class="container">
+
+	<div class="row">
+		<div class="col-xs-8">
+			<h2 class="section-headline"><span>My Profile</span></h2>
+		</div>
+		<div class="col-xs-4">
+			<img src="../../../assets/image/anavis.jpeg" class="img-responsive right" style="width:400px; z-index:2;" >
+		</div>
+
+	</div>
+	<hr style="position: absolute;width:85%; height:6px; background-color: #333; z-index:-1; margin-top: -170px;" />
+	
+
+
+	<div *ngIf = "!dataFetched" style="margin-top: 50px;">
+		<div class="row">
+			<div class="col-mat-2 col-mat-offset-5">
+				<mat-spinner></mat-spinner>
+			</div>
+		</div>
+	</div>
+<h3><strong>**Keep form blank if no changes are needed**</strong></h3>
+	<div class="row" style="margin-top:30px;">
+		<div class="col-xs-3"></div>
+		<div *ngIf="dataFetched">
+			<div class="col-xs-9">
+				<div class="panel-group" style="width: 160%">
+					<div class="panel panel-default panel-faq" style="border:none;">
+						<div class="panel-body" style="background-color: #ededed; margin-top: 20px;">
+						
+									<div style="margin-top: 20px;">
+										<div class="alert alert-danger" *ngIf="incorrectPassword">
+											<strong>Incorrect Password!</strong> Please enter the correct password for the current user.
+										</div>
+										<div class="alert alert-success" *ngIf="updateSuccess">
+											<strong>Update Success!</strong>
+										</div>
+									</div>
+									<form (ngSubmit)="onUpdateUserInfo()">
+										<input type="hidden" name="id" [(ngModel)]="user.id" />
+										<div class="bg-info" *ngIf="updateSuccess">User info updated.</div>
+										<div class="form-group">
+											<div class="row" style="margin-left: 0px">
+												<div class="col-xs-6">
+													<label for="firstName">First Name</label>
+													<input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="user.firstName" />
+												</div>
+												<div class="col-xs-6">
+													<label for="lastName">Last Name</label>
+													<input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="user.lastName" />
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="username">
+												*Username. 
+											</label>&nbsp;<span *ngIf="usernameExists" style="color:red">Username already exists. Choose a different one.</span>
+											<input required="required" type="text" class="form-control" id="username" name="username" [(ngModel)]="user.username" />	
+										</div>
+										<div class="form-group">
+											<label for="currentPassword">
+												Current Password
+											</label>
+											<input type="password" class="form-control" id="password" name="password" [(ngModel)]="currentPassword" />	
+											<p >Enter your current password to change the E-mail address or Password.</p>
+										</div>
+										<div class="form-group">
+											<label for="email">
+												*Email Address 
+											</label>&nbsp;<span *ngIf="emailExists" style="color:red">Email already exists. Choose a different one.</span>
+											<input required="required" type="email" class="form-control" id="email" name="email" [(ngModel)]="user.email" />
+											<p>A valid e-mail address. All e-mails from the system will be sent to this address.</p>	
+										</div>
+										<div class="form-group">
+											<label for="codiceFiscale">
+												*Codice Fiscale
+											</label>&nbsp;
+											<input required="required" type="text" class="form-control" id="codiceFiscale" name="codiceFiscale" [(ngModel)]="user.codiceFiscale" />
+											<p>Your personal Codice Fiscale.
+											</div>
+											<div class="form-group">
+												<label for="paese">
+													*Country 
+												</label>&nbsp;
+												<input required="required" type="text" class="form-control" id="paese" name="paese" [(ngModel)]="user.paese" />
+												<p>A valid country.  </p>	
+											</div>
+											<div class="form-group">
+												<label for="citta">
+													*City
+												</label>&nbsp;
+												<input required="required" type="text" class="form-control" id="citta" name="citta" [(ngModel)]="user.citta" />
+												<p>A valid city.</p>	
+											</div>
+											<div class="form-group">
+												<label for="phone">
+													*Phone Number
+												</label>&nbsp;
+												<input required="required" type="text" class="form-control" id="phone" name="phone" [(ngModel)]="user.phone" />
+												<p>A valid phone number.</p>	
+											</div>
+
+											
+                                                <div class="form-group">
+												<mat-form-field class="full-width" appearance="fill">
+													<mat-label>Birth Date</mat-label>
+													<input matInput id="birthDate" type="date" [(ngModel)]="user.birthDate" name="birthDate">
+													&nbsp;
+													<p>Your Birth Date.</p>
+
+													<mat-datepicker #picker></mat-datepicker>
+												</mat-form-field>
+											</div>
+
+											
+
+											
+				<div class="form-group">
+					            <mat-form-field class="full-width" appearance="fill">
+					             	<mat-label>Blood Type</mat-label>
+						         <mat-select  [(ngModel)]="user.gruppoSanguigno" name="gruppoSanguigno" >
+					          					<mat-option value="A">A</mat-option>
+												<mat-option value="B">B</mat-option>
+												<mat-option value="AB">AB</mat-option>
+												<mat-option value="0">0</mat-option>
+											</mat-select>
+					           </mat-form-field>
+					       </div>
+				
+
+
+											<div class="form-group">
+												<label for="extraUserInfo">
+													*Extra User Info
+												</label>&nbsp;
+												<input required="required" type="text" class="form-control" id="extraUserInfo" name="extraUserInfo" [(ngModel)]="user.extraUserInfo" />
+												<p>Extra Usefull info.</p>	
+											</div>
+
+
+
+
+											<div class="form-group">
+												<label for="txtNewPassword">
+													*New Password
+												</label>&nbsp;<span id="checkPasswordMatch" style="color:red;"></span>
+												<input type="password" class="form-control" id="txtNewPassword" name="txtNewPassword" [(ngModel)]="newPassword" />
+											</div>
+											<div class="form-group">
+												<label for="txtConfirmPassword">
+													*Confirm New Password
+												</label>
+												<input type="password" class="form-control" id="txtConfirmPassword" name="txtNewPassword"  />
+											</div>
+											&nbsp;
+											<button style="width: 100%;" mat-raised-button type="submit" class="mat-primary" id="udpateuserInfoButton">Save</button>
+										</form>				
+					</div>
+					
